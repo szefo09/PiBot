@@ -29,6 +29,7 @@ client.on("message", (message) => {
                     message.react('512375887656779793');
                     message.react('513102050637250599');
                     message.react('513102229453013002');
+                    message.react('513107129759170580');
                 }})
             })
         });

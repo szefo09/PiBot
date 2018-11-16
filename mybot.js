@@ -31,7 +31,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!id\n!ping\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
+        message.channel.send("Available Commands:\n!id\n!ping\n!rape\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
     }
     if (command === 'id') {
         message.channel.send(message.author.id);

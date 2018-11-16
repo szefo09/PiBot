@@ -8,7 +8,7 @@ var commands = require("./commands/commands.js");
 let data = require("./data.js");
 let password = data.psswd;
 const prefix = data.token;
-let stop = false;
+let stop = true;
 client.on("ready", () => {
     console.log("I am ready!");
 });
@@ -29,6 +29,7 @@ client.on("message", (message) => {
     }
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
+    //non-admin commands
     if (command === 'help') {
         message.channel.send("Available Commands:\n!id\n!ping\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
     }
@@ -40,78 +41,14 @@ client.on("message", (message) => {
         message.channel.send("pong!");
         return;
     }
-    if (command === 'dl' && admin) {
-        let dlLink = args[0];
-        let name = args[1];
-        if (typeof dlLink !== 'undefined') {
-            if (typeof name !== 'undefined') {
-                let command = `wget -q -c -O /media/pi/usb/filmy/${name} '${dlLink}'`
-                message.channel.send(`Started downloading ${name}`);
-                console.log(command)
-                let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
-                download.on('error', (error) => {
-                    message.channel.send(`Error downloading ${name} from ${dlLink}.\n${error}`);
-                    return;
-                });
-                download.on('close', function (code, signal) {
-                    if (code === 0) {
-                        message.channel.send(`Download ${name} from link ${dlLink} Completed.`);
-                    } else {
-                        message.channel.send(`Download ${name} from link ${dlLink} was interrupted.`);
-                    }
-                });
-            } else {
-                let command = `wget -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
-                console.log(command);
-                let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
-                message.channel.send(`Started downloading ${dlLink}`);
-                download.on('error', (error) => {
-                    message.channel.send(`Error downloading from ${dlLink}.\n${error}`);
-                    return;
-                });
-                download.on('close', function (code, signal) {
-                    if (code === 0) {
-                        message.channel.send(`Download from link ${dlLink} Completed.`);
-                    } else {
-                        message.channel.send(`Download from link ${dlLink} was interrupted.`);
-                    }
-                });
-            }
-        } else {
-            message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
-        }
-    }
-    if (command === 'restart-server' && admin) {
-        message.channel.send("restarting the server!");
-        console.log(commands.restartServer);
-        exec(commands.restartServer);
-    }
-    if (command === 'update-scripts' && admin) {
-        message.channel.send("Updating Server Scripts and databases!");
-        console.log(commands.updateScript);
-        exec(commands.updateScript);
-    }
-    if (command === "update-ygopro" && admin) {
-        message.channel.send("Updating YgoPro!");
-        console.log(commands.updateYgoPro);
-        exec(commands.updateYgoPro);
-    }
-    if (command === "update-windbot" && admin) {
-        message.channel.send("Updating Windbot!");
-        console.log(commands.updateWindbot);
-        exec(commands.updateWindbot);
-    }
-    if (command === "restart-pi" && admin) {
-        message.channel.send("Restarting Pi!");
-        exec(commands.restartPi);
-    }
-    if (command === "update-bot" && admin) {
-        message.channel.send("BeepBoop Updating myself!")
-        exec(commands.updateBot);
-    }
-    if (command === "stop" && admin) {
-        stop = true;
-        message.channel.send("Sorry, I'll stop editing those!");
+    if (command === "get-deckssave") {
+        compressing.compressDir('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip')
+            .then(() => {
+                message.channel.send("Your decks_save.zip: ", {
+                    files: ["/media/pi/usb/decks_save.zip"]
+                })
+            })
+            .catch();
     }
     if (command === "get-duellog") {
         compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
@@ -124,31 +61,73 @@ client.on("message", (message) => {
                 message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
             });
     }
-    if (command === "get-deckssave") {
-        compressing.compressDir('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip')
-            .then(() => {
-                message.channel.send("Your decks_save.zip: ", {
-                    files: ["/media/pi/usb/decks_save.zip"]
+    if(admin){
+    //admin commands
+    switch(command){
+        case 'dl':{
+            Download(args);
+            break;
+        }
+        case 'restart-server':{
+            message.channel.send("restarting the server!");
+            console.log(commands.restartServer);
+            exec(commands.restartServer);
+            break;
+        }
+        case 'update-scripts':{
+            message.channel.send("Updating Server Scripts and databases!");
+            console.log(commands.updateScript);
+            exec(commands.updateScript);
+            break;
+        }
+        case 'update-ygopro':{
+            message.channel.send("Updating YgoPro!");
+            console.log(commands.updateYgoPro);
+            exec(commands.updateYgoPro);
+            break;
+        }
+        case 'update-windbot':{
+            message.channel.send("Updating Windbot!");
+            console.log(commands.updateWindbot);
+            exec(commands.updateWindbot);
+            break;
+        }
+        case 'restart-pi':{
+            message.channel.send("Restarting Pi!");
+            exec(commands.restartPi);
+            break;
+        }
+        case 'update-bot':{
+            message.channel.send("BeepBoop Updating myself!")
+            exec(commands.updateBot);
+            break;
+        }
+        case 'stop':{
+            if(stop==false){
+            stop = true;
+            message.channel.send("Sorry, I'll stop editing those!");
+            }
+            break;
+        }
+        case 'getcurrentrooms':{
+            stop = false;
+            CurrentRoomsMessage().then(function (msg) {
+                message.channel.send(msg).then(function (messageSent) {
+                   let interval = setInterval(() => {
+                        if (stop == false) {
+                            EditCurrentRoomsMessage(messageSent);
+                        } else {
+                            clearInterval(interval);
+                            interval=0;
+                            messageSent.delete();
+                        }
+                    }, 3000);
                 })
-            })
-            .catch();
-    }
-    if (command === "getcurrentrooms" && admin) {
-        stop = false;
-        CurrentRoomsMessage().then(function (msg) {
-            message.channel.send(msg).then(function (messageSent) {
-               let interval = setInterval(() => {
-                    if (stop == false) {
-                        EditCurrentRoomsMessage(messageSent);
-                    } else {
-                        clearInterval(interval);
-                        interval=0;
-                        messageSent.delete();
-                    }
-                }, 3000);
-            })
-        });
-    }
+            });
+            break;
+        }
+    }}
+
 });
 
 function CurrentRoomsMessage() {
@@ -194,4 +173,47 @@ function EditCurrentRoomsMessage(msg) {
         msg.edit(m)
     })
 }
+
+function Download(args){
+    let dlLink = args[0];
+    let name = args[1];
+    if (typeof dlLink !== 'undefined') {
+        if (typeof name !== 'undefined') {
+            let command = `wget -q -c -O /media/pi/usb/filmy/${name} '${dlLink}'`
+            message.channel.send(`Started downloading ${name}`);
+            console.log(command)
+            let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
+            download.on('error', (error) => {
+                message.channel.send(`Error downloading ${name} from ${dlLink}.\n${error}`);
+                return;
+            });
+            download.on('close', function (code, signal) {
+                if (code === 0) {
+                    message.channel.send(`Download ${name} from link ${dlLink} Completed.`);
+                } else {
+                    message.channel.send(`Download ${name} from link ${dlLink} was interrupted.`);
+                }
+            });
+        } else {
+            let command = `wget -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
+            console.log(command);
+            let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
+            message.channel.send(`Started downloading ${dlLink}`);
+            download.on('error', (error) => {
+                message.channel.send(`Error downloading from ${dlLink}.\n${error}`);
+                return;
+            });
+            download.on('close', function (code, signal) {
+                if (code === 0) {
+                    message.channel.send(`Download from link ${dlLink} Completed.`);
+                } else {
+                    message.channel.send(`Download from link ${dlLink} was interrupted.`);
+                }
+            });
+        }
+    } else {
+        message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
+    }
+}
+
 client.login(password);

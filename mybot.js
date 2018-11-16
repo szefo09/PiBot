@@ -21,12 +21,15 @@ client.on("message", (message) => {
     if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
     }
-    if(message.content.toLowerCase().includes("http")){
+    if(message.content.toLowerCase().includes("http")||message.attachments.array().length>0){
         message.react('👌').then(()=>{
             message.react("😂").then(()=>{
                 message.react('💯').then(()=>{
+                    if(message.guild.id==data.discordID){
                     message.react('512375887656779793');
-                })
+                    message.react('513102050637250599');
+                    message.react('513102229453013002');
+                }})
             })
         });
     }

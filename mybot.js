@@ -25,11 +25,12 @@ client.on("message", (message) => {
         message.react('👌').then(()=>{
             message.react("😂").then(()=>{
                 message.react('💯').then(()=>{
+                    if(message.channel.type=='text'){
                     if(message.guild.id==data.discordID){
                     message.react('512375887656779793');
                     message.react('513102050637250599');
                     message.react('513102229453013002');
-                    message.react('513107129759170580');
+                    message.react('513107129759170580');}
                 }})
             })
         });

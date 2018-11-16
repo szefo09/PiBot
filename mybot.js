@@ -156,7 +156,7 @@ client.on("message", (message) => {
         case 'dashboard':{
             let dashboard = spawn('./list.sh');
             dashboard.stdout.on('data',(data)=>{
-                message.channel.send(`child stdout:\n${data}`);
+                message.channel.send(`\n${data}`);
             });
             dashboard.stderr.on('data', function (data) {
                 console.log('stderr: ' + data.toString());

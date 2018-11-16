@@ -144,6 +144,8 @@ client.on("message", (message) => {
                         }
                     }, 3000);
                 })
+            }).catch((err)=>{
+                console.log(err);
             });
             break;
         }

@@ -22,9 +22,9 @@ client.on("message", (message) => {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
     }
     if(message.content.toLowerCase().includes("http")){
-        message.react('👌').then((messageSent)=>{
-            messageSent.react("😂").then((messageSent)=>{
-                messageSent.react('💯');
+        message.react('👌').then(()=>{
+            message.react("😂").then(()=>{
+                message.react('💯');
             })
         });
     }

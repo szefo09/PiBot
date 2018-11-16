@@ -65,7 +65,7 @@ client.on("message", (message) => {
     //admin commands
     switch(command){
         case 'dl':{
-            Download(args);
+            Download(args,message);
             break;
         }
         case 'restart-server':{
@@ -174,7 +174,7 @@ function EditCurrentRoomsMessage(msg) {
     })
 }
 
-function Download(args){
+function Download(args,message){
     let dlLink = args[0];
     let name = args[1];
     if (typeof dlLink !== 'undefined') {

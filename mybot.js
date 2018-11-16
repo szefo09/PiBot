@@ -7,6 +7,7 @@ var commands=require("./commands/commands.js");
 let data = require("./data.js");
 let password = data.psswd;
 const prefix =data.token;
+let stop =false;
 client.on("ready", () => {
   console.log("I am ready!");
 });
@@ -110,6 +111,10 @@ client.on("message", (message) => {
         message.channel.send("BeepBoop Updating myself!")
         exec(commands.updateBot);
     }
+    if(command==="stop" && admin){
+        stop=true;
+        message.channel.send("Sorry, I'll stop editing those!");
+    }
     if(command==="get-duellog"){
       compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json','/media/pi/usb/duel_log.zip')
       .then(()=>{
@@ -125,44 +130,61 @@ client.on("message", (message) => {
         .catch(); 
     }
     if(command==="getcurrentrooms" && admin){
-        let url=`http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
-        getJSON(url).then(function(response){
-            let msg ='';
-            if(response!=null){
-                let rooms = response.rooms;
-                for(let i in rooms){
-                    
-                    let room = rooms[i];
-                    msg+=`Duel ID: ${i} Name: ${room.roomname} `;
-                    let duelers=[];
-                    let watchers=[];
-                    
-                    for(let j in room.users){
-                        
-                        if(room.users[j].pos==7){
-                            watchers.push(room.users[j]);
-                        }else{
-                            duelers.push(room.users[j]);
-                        }
-                    }
-                    msg+="Players: "
-                    for(let d in duelers){
-                    msg+=`${duelers[d].name}  `
-                    }
-                
-                    if(watchers.length>0){
-                        message+="\nWatchers: "
-                        for(let w in watchers){
-                            message+=`${watchers[w].name}  `;
-                        }
-                    }
-                    msg+="\nStatus of the game: "+room.istart+"\n\n";
+        stop=false;
+        CurrentRoomsMessage().then(function(msg){
+            message.channel.send(msg).then(function(messageSent){
+                setInterval(()=>{
+                    if(stop==false){
+                    CurrentRoomsMessage().then(function(m){
+                        messageSent.edit(m);
+                    })
+                }else{
+                    return;
                 }
-                message.channel.send(msg);
-            }
-        }).catch(function(error){
-            console.log(error);
-        });
+                },3000);
+            })
+        })
+        
     }
 });
+function CurrentRoomsMessage(){
+    let url=`http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
+    return getJSON(url).then(function(response){
+        let msg ='';
+        if(response!=null){
+            let rooms = response.rooms;
+            for(let i in rooms){
+                
+                let room = rooms[i];
+                msg+=`Duel ID: ${i} Name: ${room.roomname} `;
+                let duelers=[];
+                let watchers=[];
+                
+                for(let j in room.users){
+                    
+                    if(room.users[j].pos==7){
+                        watchers.push(room.users[j]);
+                    }else{
+                        duelers.push(room.users[j]);
+                    }
+                }
+                msg+="Players: "
+                for(let d in duelers){
+                msg+=`${duelers[d].name}  `
+                }
+            
+                if(watchers.length>0){
+                    message+="\nWatchers: "
+                    for(let w in watchers){
+                        message+=`${watchers[w].name}  `;
+                    }
+                }
+                msg+="\nStatus of the game: "+room.istart+"\n\n";
+            }
+            return (msg);
+        }
+    }).catch(function(error){
+        console.log(error);
+    });
+}
 client.login(password);

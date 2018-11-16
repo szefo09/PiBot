@@ -24,7 +24,9 @@ client.on("message", (message) => {
     if(message.content.toLowerCase().includes("http")){
         message.react('👌').then(()=>{
             message.react("😂").then(()=>{
-                message.react('💯');
+                message.react('💯').then(()=>{
+                    message.react('512375887656779793');
+                })
             })
         });
     }

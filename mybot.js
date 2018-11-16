@@ -136,7 +136,9 @@ client.on("message", (message) => {
                 message.channel.send(msg).then(function (messageSent) {
                    let interval = setInterval(() => {
                         if (stop == false) {
-                            EditCurrentRoomsMessage(messageSent);
+                            EditCurrentRoomsMessage(messageSent).catch((err)=>{
+                                console.log(err);
+                            });
                         } else {
                             clearInterval(interval);
                             interval=0;

@@ -1,7 +1,7 @@
 let begin = "sudo bash /home/pi/server/ygopro-server/";
 module.exports = {
  updateScript:begin+"update.sh",
- updateYgoPro:begin+"updateYgopro.sh",
+ updateYgoPro:begin+"updateygopro.sh",
  updateWindbot:begin+"updateWindbot.sh",
  restartServer:"sudo pm2 restart all",
  restartPi:"sudo reboot",

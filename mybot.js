@@ -143,6 +143,7 @@ client.on("message", (message) => {
                     } else {
                         clearInterval(interval);
                         interval=0;
+                        messageSent.delete();
                     }
                 }, 3000);
             })
@@ -169,7 +170,7 @@ function CurrentRoomsMessage() {
                         duelers.push(room.users[j]);
                     }
                 }
-                msg += "Players: "
+                msg += "\nPlayers: "
                 for (let d in duelers) {
                     msg += `${duelers[d].name}  `
                 }

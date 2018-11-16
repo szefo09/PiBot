@@ -21,7 +21,7 @@ client.on("message", (message) => {
     if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
     }
-    if((message.content.toLowerCase().includes("http")||message.attachments.array().length>0) && message.author.bot){
+    if((message.content.toLowerCase().includes("http")||message.attachments.array().length>0) && !message.author.bot){
         message.react('👌').then(()=>{
             message.react("😂").then(()=>{
                 message.react('💯').then(()=>{

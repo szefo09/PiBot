@@ -40,6 +40,9 @@ client.on("message", (message) => {
     if (command === 'ping') {
         message.channel.send("pong!");
         return;
+    }    
+    if(command === 'rape'){
+        message.channel.send("N-No... Don't! Yamete Kudasai Senpai!!");
     }
     if (command === "get-deckssave") {
         compressing.compressDir('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip')
@@ -61,6 +64,7 @@ client.on("message", (message) => {
                 message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
             });
     }
+
     if(admin){
     //admin commands
     switch(command){

@@ -98,19 +98,19 @@ client.on("message", (message) => {
         case 'update-scripts':{
             message.channel.send("Updating Server Scripts and databases!");
             console.log(commands.updateScript);
-            exec(commands.updateScript);
+            exec(commands.updateScript,{'maxBuffer':600*1024});
             break;
         }
         case 'update-ygopro':{
             message.channel.send("Updating YgoPro!");
             console.log(commands.updateYgoPro);
-            exec(commands.updateYgoPro);
+            exec(commands.updateYgoPro,{'maxBuffer':600*1024});
             break;
         }
         case 'update-windbot':{
             message.channel.send("Updating Windbot!");
             console.log(commands.updateWindbot);
-            exec(commands.updateWindbot);
+            exec(commands.updateWindbot,{'maxBuffer':600*1024});
             break;
         }
         case 'restart-pi':{

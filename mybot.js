@@ -29,7 +29,7 @@ client.on("message", (message) => {
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
     if(command==='help'){
-        message.channel.send("Available Commands:\n!id\n!ping\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot");
+        message.channel.send("Available Commands:\n!id\n!ping\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
     }
     if(command==='id'){
         message.channel.send(message.author.id);

@@ -124,20 +124,45 @@ client.on("message", (message) => {
         })
         .catch(); 
     }
-    if(command==="getrooms" && admin){
-        let response = loadRooms();
-        //message.channel.send(response.toString());
+    if(command==="getcurrentrooms" && admin){
+        let url=`http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
+        getJSON(url).then(function(response){
+            let msg ='';
+            if(response!=null){
+                let rooms = response.rooms;
+                for(let i in rooms){
+                    
+                    let room = rooms[i];
+                    msg+=`Duel ID: ${i} Name: ${room.roomname} `;
+                    let duelers=[];
+                    let watchers=[];
+                    
+                    for(let j in room.users){
+                        
+                        if(room.users[j].pos==7){
+                            watchers.push(room.users[j]);
+                        }else{
+                            duelers.push(room.users[j]);
+                        }
+                    }
+                    msg+="Players: "
+                    for(let d in duelers){
+                    msg+=`${duelers[d].name}  `
+                    }
+                
+                    if(watchers.length>0){
+                        message+="\nWatchers: "
+                        for(let w in watchers){
+                            message+=`${watchers[w].name}  `;
+                        }
+                    }
+                    msg+="\nStatus of the game: "+room.istart+"\n\n";
+                }
+                message.channel.send(msg);
+            }
+        }).catch(function(error){
+            console.log(error);
+        });
     }
 });
-function loadRooms(){
-    //http://192.168.1.17:7211/api/getrooms?callback=?&pass=Nanahira
-
-    let url=`http://${data.serverIP}:${data.serverPort}/api/getrooms?callback=?&pass=${data.serverPassword}`;
-    console.log(url);
-    getJSON(url).then(function(response) {
-         console.log(response);
-    }).catch(function(error) {
-        console.log(error);
-     });
-}
 client.login(password);

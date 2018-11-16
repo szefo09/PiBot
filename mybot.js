@@ -4,8 +4,11 @@ const client = new Discord.Client();
 const compressing = require('compressing').zip;
 var getJSON = require('get-json');
 var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var commands = require("./commands/commands.js");
 let data = require("./data.js");
+
+
 let password = data.psswd;
 const prefix = data.token;
 let stop = true;
@@ -17,6 +20,13 @@ client.on("message", (message) => {
     let admin = false;
     if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
+    }
+    if(message.content.toLowerCase().includes("http")){
+        message.react('👌').then((messageSent)=>{
+            messageSent.react("😂").then(()=>{
+                messageSent.react('💯');
+            })
+        });
     }
     if (!message.content.startsWith(prefix) || message.author.bot) {
         return;
@@ -31,7 +41,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!id\n!ping\n!rape\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
+        message.channel.send("Available Commands:\n!id\n!ping\n!rape\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
     }
     if (command === 'id') {
         message.channel.send(message.author.id);
@@ -128,6 +138,19 @@ client.on("message", (message) => {
                     }, 3000);
                 })
             });
+            break;
+        }
+        case 'dashboard':{
+            let dashboard = spawn('./list.sh');
+            dashboard.stdout.on('data',(data)=>{
+                message.channel.send(`child stdout:\n${data}`);
+            });
+            dashboard.stderr.on('data', function (data) {
+                console.log('stderr: ' + data.toString());
+              });
+              dashboard.on('exit', function (code) {
+                console.log('child process exited with code ' + code.toString());
+              });
             break;
         }
     }}

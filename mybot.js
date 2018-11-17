@@ -14,6 +14,7 @@ const prefix = data.token;
 let stop = true;
 client.on("ready", () => {
     console.log("I am ready!");
+    client.channels.find("512392350933450767").send("Other Bots Outdated\nPiBot Activated."+client.emojis.random(2));
 });
 
 client.on("message", (message) => {

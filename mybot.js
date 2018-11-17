@@ -14,9 +14,7 @@ const prefix = data.token;
 let stop = true;
 client.on("ready", () => {
     console.log("I am ready!");
-    try{
-        client.channels.get("512392350933450767").send(client.emojis.random(2).toString()+"Other Bots outdated.\nPiBot activated!"+client.emojis.random(2).toString());
-    }catch{}
+    client.channels.get("512392350933450767").send(client.emojis.random(2).toString()+"\nOther Bots outdated.\nPiBot activated!\n"+client.emojis.random(2).toString());
 });
 
 client.on("message", (message) => {

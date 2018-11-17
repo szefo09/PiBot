@@ -167,6 +167,7 @@ client.on("message", (message) => {
             return;
         }
         case 'restart':{
+            message.channel.send("Przepraszam. "+client.emojis.random());
             exec("sudo pm2 restart mybot");
         }
     }}

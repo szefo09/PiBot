@@ -48,7 +48,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!id\n!ping\n!rape\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
+        message.channel.send("Available Commands:\n!id\n!ping\n!rape\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n");
     }
     if (command === 'id') {
         message.channel.send(message.author.id);
@@ -137,6 +137,7 @@ client.on("message", (message) => {
             CurrentRoomsMessage().then(function (msg) {
                 message.channel.send(msg).then(function (messageSent) {
                     SetIntervalForCurrentRooms(messageSent);
+                    return;
                 }).catch((err)=>{
                     console.log(err);
                 });
@@ -158,23 +159,42 @@ client.on("message", (message) => {
               });
             break;
         }
+        case 'clearchat':{
+            DeleteMessages();
+            break;
+        }
         default:{
             return;
         }
     }}
-return;
-});
 
-function SetIntervalForCurrentRooms(messageSent){
+async function DeleteMessages(){
+    message.delete();
+    if(args[0]>99){
+        args[0]==99;
+    }
+    try{
+    const fetched = await message.channel.fetchMessages({limit:args[0]});
+    console.log(fetched.size + ' messages found, deleting...');
+    message.channel.bulkDelete(fetched).catch(error=>message.channel.send("Error: "+error));
+    }catch{
+        message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. "+client.emojis.random());
+        
+    }
+}
+    
+function SetIntervalForCurrentRooms(message){
     let interval = setInterval(() => {
         if (stop == false) {
-            EditCurrentRoomsMessage(messageSent);
+            EditCurrentRoomsMessage(message);
+            //console.log(interval);
         } else {
             clearInterval(interval);
             interval=0;
-            messageSent.delete();
+            message.delete();
         }
     }, 2000);
+    return;
 }
 
 function CurrentRoomsMessage() {
@@ -218,10 +238,12 @@ function CurrentRoomsMessage() {
 function EditCurrentRoomsMessage(msg) {
     CurrentRoomsMessage().then(function (m) {
         msg.edit(m)
-        m=0;
+        return;
     })
+
 }
-function Download(args,message){
+
+function Download(args){
     let dlLink = args[0];
     let name = args[1];
     if (typeof dlLink !== 'undefined') {
@@ -263,5 +285,8 @@ function Download(args,message){
     }
     message=0;
 }
+return;
+});
+
 
 client.login(password);

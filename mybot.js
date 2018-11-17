@@ -136,15 +136,7 @@ client.on("message", (message) => {
             stop = false;
             CurrentRoomsMessage().then(function (msg) {
                 message.channel.send(msg).then(function (messageSent) {
-                   let interval = setInterval(() => {
-                        if (stop == false) {
-                            EditCurrentRoomsMessage(messageSent);
-                        } else {
-                            clearInterval(interval);
-                            interval=0;
-                            messageSent.delete();
-                        }
-                    }, 3000);
+                    SetIntervalForCurrentRooms(messageSent);
                 }).catch((err)=>{
                     console.log(err);
                 });
@@ -166,9 +158,24 @@ client.on("message", (message) => {
               });
             break;
         }
+        default:{
+            return;
+        }
     }}
-
+return;
 });
+
+function SetIntervalForCurrentRooms(messageSent){
+    let interval = setInterval(() => {
+        if (stop == false) {
+            EditCurrentRoomsMessage(messageSent);
+        } else {
+            clearInterval(interval);
+            interval=0;
+            messageSent.delete();
+        }
+    }, 2000);
+}
 
 function CurrentRoomsMessage() {
     let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
@@ -194,9 +201,9 @@ function CurrentRoomsMessage() {
                     msg += `${duelers[d].name}  `
                 }
                 if (watchers.length > 0) {
-                    message += "\nWatchers: "
+                    msg += "\nViewers: "
                     for (let w in watchers) {
-                        message += `${watchers[w].name}  `;
+                        msg += `${watchers[w].name}  `;
                     }
                 }
                 msg += "\nStatus of the game: " + room.istart + "\n\n";
@@ -211,9 +218,9 @@ function CurrentRoomsMessage() {
 function EditCurrentRoomsMessage(msg) {
     CurrentRoomsMessage().then(function (m) {
         msg.edit(m)
+        m=0;
     })
 }
-
 function Download(args,message){
     let dlLink = args[0];
     let name = args[1];
@@ -254,6 +261,7 @@ function Download(args,message){
     } else {
         message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
     }
+    message=0;
 }
 
 client.login(password);

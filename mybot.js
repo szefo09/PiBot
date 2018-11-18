@@ -288,7 +288,6 @@ function Download(args){
     } else {
         message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
     }
-    message=0;
 }
 });
 

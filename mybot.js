@@ -14,7 +14,6 @@ const prefix = data.token;
 let stop = true;
 client.on("ready", () => {
     console.log("I am ready!");
-    exec("chmod -R 777 /media/pi/usb");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString()+"\nOther Bots outdated.\nPiBot activated!\n"+client.emojis.random(2).toString());
 });
 

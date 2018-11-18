@@ -290,7 +290,6 @@ function Download(args){
     }
     message=0;
 }
-return;
 });
 
 

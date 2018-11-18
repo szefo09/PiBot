@@ -252,7 +252,7 @@ function Download(args){
     let dlLink = args[0];
     let name;
     let path;
-    if(args[1].contains("/")){
+    if(args[1].includes("/")){
        name=args[1].split("/").pop();
        path=args[1].split("/",1);
         let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;

@@ -250,10 +250,22 @@ function EditCurrentRoomsMessage(msg) {
 
 function Download(args){
     let dlLink = args[0];
-    let name = args[1];
+    let name;
+    let path;
+    if(args[1].contains("/")){
+       name=args[1].split("/").pop();
+       path=args[1].split("/",1);
+        let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
+        exec(mkdircmd);
+        path+="/";
+    }
+    else
+    {
+     name = args[1];
+    }
     if (typeof dlLink !== 'undefined') {
         if (typeof name !== 'undefined') {
-            let command = `wget -q -c -O /media/pi/usb/filmy/${name} '${dlLink}'`
+            let command = `wget -q -c -O /media/pi/usb/filmy/${path}${name} '${dlLink}'`
             message.channel.send(`Started downloading ${name}`);
             console.log(command)
             let download = exec(command /*,{'maxBuffer':1000*1024}*/ );

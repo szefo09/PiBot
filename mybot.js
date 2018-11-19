@@ -139,16 +139,11 @@ client.on("message", (message) => {
         }
         case 'getcurrentrooms':{
             stop = false;
-            CurrentRoomsMessage().then(function (msg) {
-                message.channel.send(msg).then(function (messageSent) {
-                    SetIntervalForCurrentRooms(messageSent);
-                    return;
-                }).catch((err)=>{
-                    console.log(err);
-                });
-            }).catch((err)=>{
-                console.log(err);
-            });
+            CurrentRoomsMessage.then((messageArray)=>{
+                for(msg in messageArray){
+                    message.channel.send(msg);
+                }
+            }).catch((err)=>{console.log(err)});
             break;
         }
         case 'dashboard':{
@@ -167,14 +162,33 @@ client.on("message", (message) => {
         case 'clearchat':{
             DeleteMessages();
             break;
-        }
-        default:{
-            return;
-        }
+        }        
         case 'badbot':{
             message.channel.send("Przepraszam. "+client.emojis.random());
             exec("sudo pm2 restart mybot");
+            break;
         }
+        case 'test':{
+            if(t.length>2000){
+                let end =0;
+                if(t.substr(0,2000).lastIndexOf("Duel:")>2000){
+                    end =2000;
+                }else{
+                    end = t.substr(0,2000).lastIndexOf("Duel:");
+                }
+                 m = t.substr(0,end);
+                 console.log(end);
+                m2 = t.substr(end,2000);
+            }
+            message.channel.send(m);
+            message.channel.send(m2);
+            break;
+        }
+
+        default:{
+            return;
+        }
+
     }}
 
 async function DeleteMessages(){
@@ -191,21 +205,6 @@ async function DeleteMessages(){
         
     }
 }
-    
-function SetIntervalForCurrentRooms(message){
-    let interval = setInterval(() => {
-        if (stop == false) {
-            EditCurrentRoomsMessage(message);
-            //console.log(interval);
-        } else {
-            clearInterval(interval);
-            interval=0;
-            message.delete();
-        }
-    }, 2000);
-    return;
-}
-
 function CurrentRoomsMessage() {
     let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
     return getJSON(url).then(function (response) {
@@ -227,7 +226,7 @@ function CurrentRoomsMessage() {
                 }
                 msg += "\nPlayers: "
                 for (let d in duelers) {
-                    msg += `${duelers[d].name}  `
+                    msg += `${duelers[d].name} `
                 }
                 if (watchers.length > 0) {
                     msg += "\nViewers: "
@@ -237,19 +236,26 @@ function CurrentRoomsMessage() {
                 }
                 msg += "\nStatus of the game: " + room.istart + "\n\n";
             }
-            return (msg);
+            
+            let arr = [];
+            
+            let maxLength=2000; //max message size for discord.
+            do{    
+                if(msg.length>maxLength){
+                    let lastDuelID_pos =str.substr(0,maxLength).lastIndexOf("Duel ID:");
+                    let messageSubstring = str.substr(0,lastDuelID_pos);
+                    arr.push(messageSubstring);
+                    msg = msg.substr(lastDuelID_pos);
+                }
+                else{arr.push(msg);
+                msg=[];
+                }
+            }while(msg.length!=0);
+            return (arr);
         }
     }).catch(function (error) {
         console.log(error);
     });
-}
-
-function EditCurrentRoomsMessage(msg) {
-    CurrentRoomsMessage().then(function (m) {
-        msg.edit(m)
-        return;
-    })
-
 }
 
 function Download(args){

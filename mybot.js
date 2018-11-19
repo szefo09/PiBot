@@ -138,12 +138,46 @@ client.on("message", (message) => {
             break;
         }
         case 'getcurrentrooms':{
+            //generate
             stop = false;
-            CurrentRoomsMessage.then((messageArray)=>{
-                for(msg in messageArray){
-                    message.channel.send(msg);
+            let discordmsgArray=[];
+            CurrentRoomsMessage().then(function(messageArray){
+                for(let msg of messageArray){
+                message.channel.send(msg).then((m)=>{
+                    discordmsgArray.push(m);
+                });
                 }
+                
             }).catch((err)=>{console.log(err)});
+            //edit messages
+            
+            let interval =setInterval(()=>{
+                if(!stop){
+                CurrentRoomsMessage().then(function(messageArray){
+                for(let i = messageArray.length;i<discordmsgArray.length;i++){
+                    discordmsgArray[i].delete();
+                    discordmsgArray.splice(i,1);
+                }
+                for(let i=0;i<discordmsgArray.length;i++){
+                   discordmsgArray[i].edit(messageArray[i]);
+                }
+                for(let i = discordmsgArray.length;i<messageArray.length;i++){
+                    message.channel.send(messageArray[i]).then((m)=>{
+                        discordmsgArray.push(m);
+                    });
+                }
+                }).catch((err)=>{console.log(err)});
+                }
+                else
+                {
+                    clearInterval(interval);
+                    interval=0;
+                    for(let discMsg of discordmsgArray){
+                        discMsg.delete();
+                    }
+                    discordmsgArray=0;
+                }
+            },2500);
             break;
         }
         case 'dashboard':{
@@ -242,8 +276,8 @@ function CurrentRoomsMessage() {
             let maxLength=2000; //max message size for discord.
             do{    
                 if(msg.length>maxLength){
-                    let lastDuelID_pos =str.substr(0,maxLength).lastIndexOf("Duel ID:");
-                    let messageSubstring = str.substr(0,lastDuelID_pos);
+                    let lastDuelID_pos =msg.substr(0,maxLength).lastIndexOf("Duel ID:");
+                    let messageSubstring ="\n"+ msg.substr(0,lastDuelID_pos)+"\n";
                     arr.push(messageSubstring);
                     msg = msg.substr(lastDuelID_pos);
                 }

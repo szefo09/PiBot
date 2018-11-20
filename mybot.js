@@ -2,12 +2,11 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const compressing = require('compressing').zip;
-var getJSON = require('get-json');
-var exec = require('child_process').exec;
-var spawn = require('child_process').spawn;
-var commands = require("./commands/commands.js");
+let getJSON = require('get-json');
+let exec = require('child_process').exec;
+let spawn = require('child_process').spawn;
+let commands = require("./commands/commands.js");
 let data = require("./data.js");
-
 
 let password = data.psswd;
 const prefix = data.token;
@@ -27,12 +26,13 @@ client.on("message", (message) => {
             message.react("😂").then(()=>{
                 message.react('💯').then(()=>{
                     if(message.channel.type=='text'){
-                    if(message.guild.id==data.discordID){
-                    message.react('512375887656779793');
-                    message.react('513102050637250599');
-                    message.react('513102229453013002');
-                    message.react('513107129759170580');}
-                }})
+                    message.react(client.emojis.random());
+                    message.react(client.emojis.random());
+                    message.react(client.emojis.random());
+                    message.react(client.emojis.random());
+                }
+                
+            })
             })
         });
     }
@@ -222,8 +222,8 @@ client.on("message", (message) => {
         default:{
             return;
         }
-
-    }}
+    }
+}
 
 async function DeleteMessages(){
     message.delete();
@@ -272,7 +272,7 @@ function CurrentRoomsMessage() {
             }
             
             let arr = [];
-            
+            getJSON=require('get-json');
             let maxLength=2000; //max message size for discord.
             do{    
                 if(msg.length>maxLength){

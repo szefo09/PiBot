@@ -365,13 +365,15 @@ function SendCurrentRooms(message) {
                 console.log(err)
             });
         } else {
-            clearInterval(interval);
-            interval = 0;
+            
+            
             for (let discMsg of discordmsgArray) {
                 discMsg.delete();
-                discMsg = 0;
+                delete discMsg;
             }
-            discordmsgArray = 0;
+            delete discordmsgArray;
+            clearInterval(interval);
+            delete interval;
         }
     }, 2500);
 }

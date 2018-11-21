@@ -373,6 +373,7 @@ function SendCurrentRooms(message) {
             }
             delete discordmsgArray;
             clearInterval(interval);
+            delete message;
             delete interval;
         }
     }, 2500);

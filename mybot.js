@@ -375,6 +375,7 @@ function SendCurrentRooms(message) {
             clearInterval(interval);
             delete message;
             delete interval;
+            return;
         }
     }, 2500);
 }

@@ -2,18 +2,16 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const compressing = require('compressing').zip;
-let getJSON = require('get-json');
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
 let commands = require("./commands/commands.js");
 let data = require("./data.js");
-
+let stop = true;
 let password = data.psswd;
 const prefix = data.token;
-let stop = true;
 client.on("ready", () => {
     console.log("I am ready!");
-    client.channels.get("512392350933450767").send(client.emojis.random(2).toString()+"\nOther Bots outdated.\nPiBot activated!\n"+client.emojis.random(2).toString());
+    client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
 });
 
 client.on("message", (message) => {
@@ -21,18 +19,18 @@ client.on("message", (message) => {
     if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
     }
-    if(message.content.toLowerCase().includes("http")||message.attachments.array().length>0){
-        message.react('👌').then(()=>{
-            message.react("😂").then(()=>{
-                message.react('💯').then(()=>{
-                    if(message.channel.type=='text'){
-                    message.react(client.emojis.random());
-                    message.react(client.emojis.random());
-                    message.react(client.emojis.random());
-                    message.react(client.emojis.random());
-                }
-                
-            })
+    if (message.content.toLowerCase().includes("http") || message.attachments.array().length > 0) {
+        message.react('👌').then(() => {
+            message.react("😂").then(() => {
+                message.react('💯').then(() => {
+                    if (message.channel.type == 'text') {
+                        message.react(client.emojis.random());
+                        message.react(client.emojis.random());
+                        message.react(client.emojis.random());
+                        message.react(client.emojis.random());
+                    }
+
+                })
             })
         });
     }
@@ -58,8 +56,8 @@ client.on("message", (message) => {
     if (command === 'ping') {
         message.channel.send("pong!");
         return;
-    }    
-    if(command === 'rape'){
+    }
+    if (command === 'rape') {
         message.channel.send("N-No... Don't! Yamete Kudasai Senpai!!");
     }
     if (command === "get-deckssave") {
@@ -82,164 +80,151 @@ client.on("message", (message) => {
                 message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
             });
     }
-    if(command ==="reee"){
-        
-        message.channel.send("Relax "+client.emojis.random(2).toString());
+    if (command === "reee") {
+
+        message.channel.send("Relax " + client.emojis.random(2).toString());
     }
 
-    if(admin){
-    //admin commands
-    switch(command){
-        case 'dl':{
-            Download(args,message);
-            break;
-        }
-        case 'restart-server':{
-            message.channel.send("restarting the server!");
-            console.log(commands.restartServer);
-            exec(commands.restartServer);
-            break;
-        }
-        case 'update-scripts':{
-            message.channel.send("Updating Server Scripts and databases!");
-            console.log(commands.updateScript);
-            exec(commands.updateScript,{'maxBuffer':800*1024});
-            break;
-        }
-        case 'update-ygopro':{
-            message.channel.send("Updating YgoPro!");
-            console.log(commands.updateYgoPro);
-            let comm=exec(commands.updateYgoPro,{'maxBuffer':800*1024},function(stdout){
-               console.log( `child stdout:\n${stdout}`);
-            });
-            break;
-        }
-        case 'update-windbot':{
-            message.channel.send("Updating Windbot!");
-            console.log(commands.updateWindbot);
-            exec(commands.updateWindbot,{'maxBuffer':800*1024});
-            break;
-        }
-        case 'restart-pi':{
-            message.channel.send("Restarting Pi!");
-            exec(commands.restartPi);
-            break;
-        }
-        case 'update-bot':{
-            message.channel.send("BeepBoop Updating myself!")
-            exec(commands.updateBot);
-            break;
-        }
-        case 'stop':{
-            if(stop==false){
-            stop = true;
-            message.channel.send("Sorry, I'll stop editing those!");
-            }
-            break;
-        }
-        case 'getcurrentrooms':{
-            //generate
-            stop = false;
-            let discordmsgArray=[];
-            CurrentRoomsMessage().then(function(messageArray){
-                for(let msg of messageArray){
-                message.channel.send(msg).then((m)=>{
-                    discordmsgArray.push(m);
-                });
-                }
-                
-            }).catch((err)=>{console.log(err)});
-            //edit messages
-            
-            let interval =setInterval(()=>{
-                if(!stop){
-                CurrentRoomsMessage().then(function(messageArray){
-                for(let i = messageArray.length;i<discordmsgArray.length;i++){
-                    discordmsgArray[i].delete();
-                    discordmsgArray.splice(i,1);
-                }
-                for(let i=0;i<discordmsgArray.length;i++){
-                   discordmsgArray[i].edit(messageArray[i]);
-                }
-                for(let i = discordmsgArray.length;i<messageArray.length;i++){
-                    message.channel.send(messageArray[i]).then((m)=>{
-                        discordmsgArray.push(m);
-                    });
-                }
-                }).catch((err)=>{console.log(err)});
-                }
-                else
+    if (admin) {
+        //admin commands
+        switch (command) {
+            case 'dl':
                 {
-                    clearInterval(interval);
-                    interval=0;
-                    for(let discMsg of discordmsgArray){
-                        discMsg.delete();
+                    Download(args, message);
+                    break;
+                }
+
+            case 'restart-server':
+                {
+                    message.channel.send("restarting the server!");
+                    console.log(commands.restartServer);
+                    exec(commands.restartServer);
+                    break;
+                }
+
+            case 'update-scripts':
+                {
+                    message.channel.send("Updating Server Scripts and databases!");
+                    console.log(commands.updateScript);
+                    exec(commands.updateScript, {
+                        'maxBuffer': 800 * 1024
+                    });
+                    break;
+                }
+
+            case 'update-ygopro':
+                {
+                    message.channel.send("Updating YgoPro!");
+                    console.log(commands.updateYgoPro);
+                    let comm = exec(commands.updateYgoPro, {
+                        'maxBuffer': 800 * 1024
+                    }, function (stdout) {
+                        console.log(`child stdout:\n${stdout}`);
+                    });
+                    break;
+                }
+
+            case 'update-windbot':
+                {
+                    message.channel.send("Updating Windbot!");
+                    console.log(commands.updateWindbot);
+                    exec(commands.updateWindbot, {
+                        'maxBuffer': 800 * 1024
+                    });
+                    break;
+                }
+
+            case 'restart-pi':
+                {
+                    message.channel.send("Restarting Pi!");
+                    exec(commands.restartPi);
+                    break;
+                }
+
+            case 'update-bot':
+                {
+                    message.channel.send("BeepBoop Updating myself!")
+                    exec(commands.updateBot);
+                    break;
+                }
+
+            case 'stop':
+                {
+                    if (stop == false) {
+                        stop = true;
+                        message.channel.send("Sorry, I'll stop editing those!");
                     }
-                    discordmsgArray=0;
+                    break;
                 }
-            },2500);
-            break;
-        }
-        case 'dashboard':{
-            let dashboard = spawn('./list.sh');
-            dashboard.stdout.on('data',(data)=>{
-                message.channel.send(`\n${data}`);
-            });
-            dashboard.stderr.on('data', function (data) {
-                console.log('stderr: ' + data.toString());
-              });
-              dashboard.on('exit', function (code) {
-                console.log('child process exited with code ' + code.toString());
-              });
-            break;
-        }
-        case 'clearchat':{
-            DeleteMessages();
-            break;
-        }        
-        case 'badbot':{
-            message.channel.send("Przepraszam. "+client.emojis.random());
-            exec("sudo pm2 restart mybot");
-            break;
-        }
-        case 'test':{
-            if(t.length>2000){
-                let end =0;
-                if(t.substr(0,2000).lastIndexOf("Duel:")>2000){
-                    end =2000;
-                }else{
-                    end = t.substr(0,2000).lastIndexOf("Duel:");
-                }
-                 m = t.substr(0,end);
-                 console.log(end);
-                m2 = t.substr(end,2000);
-            }
-            message.channel.send(m);
-            message.channel.send(m2);
-            break;
-        }
 
-        default:{
-            return;
+            case 'getcurrentrooms':
+                {
+                    SendCurrentRooms(message);
+                    break;
+                }
+
+            case 'dashboard':
+                {
+                    ShowDasboard(message);
+                    break;
+                }
+
+            case 'clearchat':
+                {
+                    DeleteMessages(message, args);
+                    break;
+                }
+
+            case 'badbot':
+                {
+                    message.channel.send("Przepraszam. " + client.emojis.random());
+                    exec("sudo pm2 restart mybot");
+                    break;
+                }
+
+            default:
+                {
+                    return;
+                }
         }
     }
+
+
+
+});
+
+function ShowDasboard(message) {
+    let dashboard = spawn('./list.sh');
+    dashboard.stdout.on('data', (data) => {
+        message.channel.send(`\n${data}`);
+    });
+    dashboard.stderr.on('data', function (data) {
+        console.log('stderr: ' + data.toString());
+    });
+    dashboard.on('exit', function (code) {
+        console.log('child process exited with code ' + code.toString());
+    });
 }
 
-async function DeleteMessages(){
+async function DeleteMessages(message, args) {
     message.delete();
-    if(args[0]>99){
-        args[0]==99;
+    if (args[0] > 99) {
+        args[0] == 99;
     }
-    try{
-    const fetched = await message.channel.fetchMessages({limit:args[0]});
-    console.log(fetched.size + ' messages found, deleting...');
-    message.channel.bulkDelete(fetched).catch(error=>message.channel.send("Error: "+error));
-    }catch{
-        message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. "+client.emojis.random());
-        
+    try {
+        const fetched = await message.channel.fetchMessages({
+            limit: args[0]
+        });
+        console.log(fetched.size + ' messages found, deleting...');
+        message.channel.bulkDelete(fetched).catch(error => message.channel.send("Error: " + error));
+    } catch {
+        message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
+
     }
 }
+
 function CurrentRoomsMessage() {
+    let getJSON = require('get-json');
     let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
     return getJSON(url).then(function (response) {
         let msg = '';
@@ -270,21 +255,23 @@ function CurrentRoomsMessage() {
                 }
                 msg += "\nStatus of the game: " + room.istart + "\n\n";
             }
-            
+            /**
+             * @param {Array.string} arr
+             */
             let arr = [];
-            getJSON=require('get-json');
-            let maxLength=2000; //max message size for discord.
-            do{    
-                if(msg.length>maxLength){
-                    let lastDuelID_pos =msg.substr(0,maxLength).lastIndexOf("Duel ID:");
-                    let messageSubstring ="\n"+ msg.substr(0,lastDuelID_pos)+"\n";
+            getJSON = require('get-json');
+            let maxLength = 2000; //max message size for discord.
+            do {
+                if (msg.length > maxLength) {
+                    let lastDuelID_pos = msg.substr(0, maxLength).lastIndexOf("Duel ID:");
+                    let messageSubstring = "\n" + msg.substr(0, lastDuelID_pos) + "\n";
                     arr.push(messageSubstring);
                     msg = msg.substr(lastDuelID_pos);
+                } else {
+                    arr.push(msg);
+                    msg = [];
                 }
-                else{arr.push(msg);
-                msg=[];
-                }
-            }while(msg.length!=0);
+            } while (msg.length != 0);
             return (arr);
         }
     }).catch(function (error) {
@@ -292,20 +279,18 @@ function CurrentRoomsMessage() {
     });
 }
 
-function Download(args){
+function Download(args) {
     let dlLink = args[0];
     let name;
     let path;
-    if(args[1].includes("/")){
-       name=args[1].split("/").pop();
-       path=args[1].split("/",1);
+    if (args[1].includes("/")) {
+        name = args[1].split("/").pop();
+        path = args[1].split("/", 1);
         let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
         exec(mkdircmd);
-        path+="/";
-    }
-    else
-    {
-     name = args[1];
+        path += "/";
+    } else {
+        name = args[1];
     }
     if (typeof dlLink !== 'undefined') {
         if (typeof name !== 'undefined') {
@@ -345,7 +330,50 @@ function Download(args){
         message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
     }
 }
-});
 
+function SendCurrentRooms(message) {
+    stop = false;
+    let discordmsgArray = [];
+    CurrentRoomsMessage().then(function (messageArray) {
+        for (let msg of messageArray) {
+            message.channel.send(msg).then((m) => {
+                discordmsgArray.push(m);
+            });
+        }
+
+    }).catch((err) => {
+        console.log(err)
+    });
+    //edit messages
+
+    let interval = setInterval(() => {
+        if (!stop) {
+            CurrentRoomsMessage().then(function (messageArray) {
+                for (let i = messageArray.length; i < discordmsgArray.length; i++) {
+                    discordmsgArray[i].delete();
+                    discordmsgArray.splice(i, 1);
+                }
+                for (let i = 0; i < discordmsgArray.length; i++) {
+                    discordmsgArray[i].edit(messageArray[i]);
+                }
+                for (let i = discordmsgArray.length; i < messageArray.length; i++) {
+                    message.channel.send(messageArray[i]).then((m) => {
+                        discordmsgArray.push(m);
+                    });
+                }
+            }).catch((err) => {
+                console.log(err)
+            });
+        } else {
+            clearInterval(interval);
+            interval = 0;
+            for (let discMsg of discordmsgArray) {
+                discMsg.delete();
+                discMsg = 0;
+            }
+            discordmsgArray = 0;
+        }
+    }, 2500);
+}
 
 client.login(password);

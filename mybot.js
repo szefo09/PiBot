@@ -370,10 +370,7 @@ function SendCurrentRooms(message) {
             for (let discMsg of discordmsgArray) {
                 discMsg.delete();
             }
-            delete discordmsgArray;
             clearInterval(interval);
-            delete message;
-            delete interval;
             return;
         }
     }, 2500);

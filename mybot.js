@@ -188,9 +188,7 @@ client.on("message", (message) => {
                 }
         }
     }
-
-
-
+return;
 });
 
 function ShowDasboard(message) {
@@ -330,7 +328,6 @@ function Download(args) {
         message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
     }
 }
-
 function SendCurrentRooms(message) {
     stop = false;
     let discordmsgArray = [];

@@ -90,7 +90,7 @@ client.on("message", (message) => {
         switch (command) {
             case 'dl':
                 {
-                    Download(args, message);
+                    Download(message,args);
                     break;
                 }
 
@@ -191,6 +191,10 @@ client.on("message", (message) => {
     return;
 });
 
+function GetTemperatureOfThePi(){
+
+}
+
 function ShowDasboard(message) {
     let dashboard = spawn('./list.sh');
     dashboard.stdout.on('data', (data) => {
@@ -279,7 +283,7 @@ function CurrentRoomsMessage() {
     });
 }
 
-function Download(args) {
+function Download(message,args) {
     let dlLink = args[0];
     let name;
     let path;

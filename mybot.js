@@ -207,7 +207,7 @@ function GetTemperatureOfThePi(){
     temp.stdout.on('data',(data)=>{
         val =`\n${data}`;
     });
-    
+    return val;
 }
 
 function ShowDasboard(message) {

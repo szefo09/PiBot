@@ -188,7 +188,7 @@ client.on("message", (message) => {
                 }
         }
     }
-return;
+    return;
 });
 
 function ShowDasboard(message) {
@@ -220,7 +220,9 @@ async function DeleteMessages(message, args) {
 
     }
 }
-
+/**
+ * @returns {string[]} Array of message strings
+ */
 function CurrentRoomsMessage() {
     let getJSON = require('get-json');
     let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
@@ -254,7 +256,7 @@ function CurrentRoomsMessage() {
                 msg += "\nStatus of the game: " + room.istart + "\n\n";
             }
             /**
-             * @param {Array.string} arr
+             * @type {string[]}
              */
             let arr = [];
             getJSON = require('get-json');
@@ -328,6 +330,7 @@ function Download(args) {
         message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
     }
 }
+
 function SendCurrentRooms(message) {
     stop = false;
     let discordmsgArray = [];
@@ -362,8 +365,8 @@ function SendCurrentRooms(message) {
                 console.log(err)
             });
         } else {
-            
-            
+
+
             for (let discMsg of discordmsgArray) {
                 discMsg.delete();
             }

@@ -197,14 +197,14 @@ client.on("message", (message) => {
 /**
  * @returns string
  */
-function GetTemperatureOfThePi(){
+async function GetTemperatureOfThePi(){
     let com = commands.getPiTemp;
     let temp = spawn(com.command,com.property);
     /**
      * @type {string} value
      */
     let val ="No data aquired";
-    temp.stdout.on('data',(data)=>{
+    await temp.stdout.on('data',(data)=>{
         val =`\n${data}`;
     });
     return val;

@@ -47,7 +47,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!id\n!ping\n!reee\n!rape\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
+        message.channel.send("Available Commands:\n!id\n!ping\n!reee\n!rape\n!get-temp\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
     }
     if (command === 'id') {
         message.channel.send(message.author.id);
@@ -83,6 +83,11 @@ client.on("message", (message) => {
     if (command === "reee") {
 
         message.channel.send("Relax " + client.emojis.random(2).toString());
+    }
+    if(command ==="get-temp"){
+        GetTemperatureOfThePi().then((temp)=>{
+            message.channel.send(temp);
+        });
     }
 
     if (admin) {
@@ -181,10 +186,6 @@ client.on("message", (message) => {
                     exec("sudo pm2 restart mybot");
                     break;
                 }
-                case 'get-temp':{
-                    message.channel.send(GetTemperatureOfThePi());
-                    break;
-                }
 
             default:
                 {
@@ -197,16 +198,16 @@ client.on("message", (message) => {
 /**
  * @returns string
  */
-async function GetTemperatureOfThePi(){
+ async function GetTemperatureOfThePi(){
     let com = commands.getPiTemp;
     let temp = spawn(com.command,com.property);
     /**
      * @type {string} value
      */
-    let val ="No data aquired";
-     temp.stdout.on('data',(data)=>{
-        console.log(`\n${data}`);
-    });
+    for await(let data of temp.stdout){
+        return `\n${data}`.replace("temp=","Temperature of the Pi=");
+    }
+
 }
 
 function ShowDasboard(message) {

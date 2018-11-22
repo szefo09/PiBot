@@ -198,15 +198,15 @@ client.on("message", (message) => {
  * @returns string
  */
 function GetTemperatureOfThePi(){
-    let spawn = spawn(commands.getPiTemp);
+    let temp = spawn(commands.getPiTemp);
     /**
      * @type {string} value
      */
     let val ="No data aquired";
-    spawn.stdout.on('data',(data)=>{
+    temp.stdout.on('data',(data)=>{
         val =`\n${data}`;
     });
-    return val;
+    
 }
 
 function ShowDasboard(message) {

@@ -7,6 +7,11 @@ let spawn = require('child_process').spawn;
 let commands = require("./commands/commands.js");
 let data = require("./data.js");
 let stop = true;
+let interval;
+/**
+ * @type {Array<Object>}
+ */
+let discordmsgArray;
 let password = data.psswd;
 const prefix = data.token;
 client.on("ready", () => {
@@ -84,8 +89,8 @@ client.on("message", (message) => {
 
         message.channel.send("Relax " + client.emojis.random(2).toString());
     }
-    if(command ==="get-temp"){
-        GetTemperatureOfThePi().then((temp)=>{
+    if (command === "get-temp") {
+        GetTemperatureOfThePi().then((temp) => {
             message.channel.send(temp);
         });
     }
@@ -95,7 +100,7 @@ client.on("message", (message) => {
         switch (command) {
             case 'dl':
                 {
-                    Download(message,args);
+                    Download(message, args);
                     break;
                 }
 
@@ -157,6 +162,12 @@ client.on("message", (message) => {
                 {
                     if (stop == false) {
                         stop = true;
+                        for (let discMsg of discordmsgArray) {
+                            discMsg.delete();
+                        }
+                        discordmsgArray = [];
+                        clearInterval(interval);
+                        interval = 0;
                         message.channel.send("Sorry, I'll stop editing those!");
                     }
                     break;
@@ -164,7 +175,7 @@ client.on("message", (message) => {
 
             case 'getcurrentrooms':
                 {
-                    stop=false;
+                    stop = false;
                     LoopCurrentRoomsMessages(message);
                     break;
                 }
@@ -198,14 +209,14 @@ client.on("message", (message) => {
 /**
  * @returns string
  */
- async function GetTemperatureOfThePi(){
+async function GetTemperatureOfThePi() {
     let com = commands.getPiTemp;
-    let temp = spawn(com.command,com.property);
+    let temp = spawn(com.command, com.property);
     /**
      * @type {string} value
      */
-    for await(let data of temp.stdout){
-        return `\n${data}`.replace("temp=","Temperature of the Pi=");
+    for await (let data of temp.stdout) {
+        return `\n${data}`.replace("temp=", "Temperature of the Pi=");
     }
 
 }
@@ -298,7 +309,7 @@ function CurrentRoomsMessage() {
     });
 }
 
-function Download(message,args) {
+function Download(message, args) {
     let dlLink = args[0];
     let name;
     let path;
@@ -350,34 +361,27 @@ function Download(message,args) {
     }
 }
 
-async function LoopCurrentRoomsMessages(message){
-    let discordmsgArray=[];
-    let interval = setInterval(() => {
-        if (!stop) {
-        let m= CurrentRoomsMessage().then(function (messageArray) {
-                for (let i = messageArray.length; i < discordmsgArray.length; i++) {
-                    discordmsgArray[i].delete();
-                    discordmsgArray.splice(i, 1);
-                }
-                for (let i = 0; i < discordmsgArray.length; i++) {
-                    discordmsgArray[i].edit(messageArray[i]);
-                }
-                for (let i = discordmsgArray.length; i < messageArray.length; i++) {
-                    message.channel.send(messageArray[i]).then((m) => {
-                        discordmsgArray.push(m);
-                    });
-                }
-            }).catch((err) => {
-                console.log(err)
-            });
-        } else {
-            for (let discMsg of discordmsgArray) {
-                discMsg.delete();
+function LoopCurrentRoomsMessages(message) {
+    discordmsgArray = [];
+
+    interval = setInterval(() => {
+        CurrentRoomsMessage().then(function (messageArray) {
+            for (let i = messageArray.length; i < discordmsgArray.length; i++) {
+                discordmsgArray[i].delete();
+                discordmsgArray.splice(i, 1);
             }
-            clearInterval(interval);
-            interval=0;
-            return;
-        }
+            for (let i = 0; i < discordmsgArray.length; i++) {
+                discordmsgArray[i].edit(messageArray[i]);
+            }
+            for (let i = discordmsgArray.length; i < messageArray.length; i++) {
+                message.channel.send(messageArray[i]).then((m) => {
+                    discordmsgArray.push(m);
+                });
+            }
+        }).catch((err) => {
+            console.log(err)
+        });
+
     }, 2500);
     return;
 }

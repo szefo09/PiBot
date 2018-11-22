@@ -204,10 +204,9 @@ async function GetTemperatureOfThePi(){
      * @type {string} value
      */
     let val ="No data aquired";
-    await temp.stdout.on('data',(data)=>{
-        val =`\n${data}`;
+     temp.stdout.on('data',(data)=>{
+        console.log(`\n${data}`);
     });
-    return val;
 }
 
 function ShowDasboard(message) {

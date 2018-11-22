@@ -164,7 +164,8 @@ client.on("message", (message) => {
 
             case 'getcurrentrooms':
                 {
-                    SendCurrentRooms(message);
+                    stop=false;
+                    LoopCurrentRoomsMessages(message);
                     break;
                 }
 
@@ -193,7 +194,6 @@ client.on("message", (message) => {
                 }
         }
     }
-    return;
 });
 /**
  * @returns string
@@ -209,7 +209,7 @@ client.on("message", (message) => {
     }
 
 }
-
+//PM2 List of proccesses
 function ShowDasboard(message) {
     let dashboard = spawn('./list.sh');
     dashboard.stdout.on('data', (data) => {
@@ -350,24 +350,11 @@ function Download(message,args) {
     }
 }
 
-function SendCurrentRooms(message) {
-    stop = false;
-    let discordmsgArray = [];
-    CurrentRoomsMessage().then(function (messageArray) {
-        for (let msg of messageArray) {
-            message.channel.send(msg).then((m) => {
-                discordmsgArray.push(m);
-            });
-        }
-
-    }).catch((err) => {
-        console.log(err)
-    });
-    //edit messages
-
+async function LoopCurrentRoomsMessages(message){
+    let discordmsgArray=[];
     let interval = setInterval(() => {
         if (!stop) {
-            CurrentRoomsMessage().then(function (messageArray) {
+        let m= CurrentRoomsMessage().then(function (messageArray) {
                 for (let i = messageArray.length; i < discordmsgArray.length; i++) {
                     discordmsgArray[i].delete();
                     discordmsgArray.splice(i, 1);
@@ -384,15 +371,16 @@ function SendCurrentRooms(message) {
                 console.log(err)
             });
         } else {
-
-
             for (let discMsg of discordmsgArray) {
                 discMsg.delete();
             }
             clearInterval(interval);
+            interval=0;
             return;
         }
     }, 2500);
+    return;
 }
+
 
 client.login(password);

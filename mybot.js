@@ -181,6 +181,10 @@ client.on("message", (message) => {
                     exec("sudo pm2 restart mybot");
                     break;
                 }
+                case 'get-temp':{
+                    message.channel.send(GetTemperatureOfThePi());
+                    break;
+                }
 
             default:
                 {
@@ -190,9 +194,19 @@ client.on("message", (message) => {
     }
     return;
 });
-
+/**
+ * @returns string
+ */
 function GetTemperatureOfThePi(){
-
+    let spawn = spawn(commands.getPiTemp);
+    /**
+     * @type {string} value
+     */
+    let val ="No data aquired";
+    spawn.stdout.on('data',(data)=>{
+        val =`\n${data}`;
+    });
+    return val;
 }
 
 function ShowDasboard(message) {

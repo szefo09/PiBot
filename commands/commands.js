@@ -5,5 +5,6 @@ module.exports = {
     updateWindbot: begin + "updateWindbot.sh",
     restartServer: "sudo pm2 restart all",
     restartPi: "sudo reboot",
-    updateBot: "cd /home/pi/server/PiBot && git reset --hard && git pull && npm install -y && sudo chmod -R 777 * && sudo pm2 restart mybot"
+    updateBot: "cd /home/pi/server/PiBot && git reset --hard && git pull && npm install -y && sudo chmod -R 777 * && sudo pm2 restart mybot",
+    getPiTemp: "vcgencmd measure_temp"
 }

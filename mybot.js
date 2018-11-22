@@ -198,7 +198,8 @@ client.on("message", (message) => {
  * @returns string
  */
 function GetTemperatureOfThePi(){
-    let temp = spawn(commands.getPiTemp);
+    let com = commands.getPiTemp;
+    let temp = spawn(com.command,com.property);
     /**
      * @type {string} value
      */

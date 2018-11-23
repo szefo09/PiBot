@@ -2,16 +2,19 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const compressing = require('compressing').zip;
+const {
+    CurrentServerRooms
+} = require("./CurrentServerRoomsClass");
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
 let commands = require("./commands/commands.js");
 let data = require("./data.js");
-let stop = true;
-let interval;
+
 /**
- * @type {Array<Object>}
+ * @type {CurrentServerRooms}
  */
-let discordmsgArray;
+let getcurrentrooms = "";
+
 let password = data.psswd;
 const prefix = data.token;
 client.on("ready", () => {
@@ -160,23 +163,17 @@ client.on("message", (message) => {
 
             case 'stop':
                 {
-                    if (stop == false) {
-                        stop = true;
-                        for (let discMsg of discordmsgArray) {
-                            discMsg.delete();
-                        }
-                        discordmsgArray = [];
-                        client.clearInterval(interval);
-                        interval = 0;
-                        message.channel.send("Sorry, I'll stop editing those!");
+                    if (getcurrentrooms != "") {
+                        getcurrentrooms.StopSending();
+                        getcurrentrooms = "";
                     }
                     break;
                 }
 
             case 'getcurrentrooms':
                 {
-                    stop = false;
-                    LoopCurrentRoomsMessages(message);
+                    getcurrentrooms = new CurrentServerRooms(message);
+                    getcurrentrooms.LoopMessages();
                     break;
                 }
 
@@ -251,64 +248,6 @@ async function DeleteMessages(message, args) {
 
     }
 }
-/**
- * @returns {string[]} Array of message strings
- */
-function CurrentRoomsMessage() {
-    let getJSON = require('get-json');
-    let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
-    return getJSON(url).then(function (response) {
-        let msg = '';
-        if (response != null) {
-            let rooms = response.rooms;
-            for (let i in rooms) {
-                let room = rooms[i];
-                msg += `Duel ID: ${i} Name: ${room.roomname} `;
-                let duelers = [];
-                let watchers = [];
-
-                for (let j in room.users) {
-                    if (room.users[j].pos == 7) {
-                        watchers.push(room.users[j]);
-                    } else {
-                        duelers.push(room.users[j]);
-                    }
-                }
-                msg += "\nPlayers: "
-                for (let d in duelers) {
-                    msg += `${duelers[d].name} `
-                }
-                if (watchers.length > 0) {
-                    msg += "\nViewers: "
-                    for (let w in watchers) {
-                        msg += `${watchers[w].name}  `;
-                    }
-                }
-                msg += "\nStatus of the game: " + room.istart + "\n\n";
-            }
-            /**
-             * @type {string[]}
-             */
-            let arr = [];
-            getJSON = require('get-json');
-            let maxLength = 2000; //max message size for discord.
-            do {
-                if (msg.length > maxLength) {
-                    let lastDuelID_pos = msg.substr(0, maxLength).lastIndexOf("Duel ID:");
-                    let messageSubstring = "\n" + msg.substr(0, lastDuelID_pos) + "\n";
-                    arr.push(messageSubstring);
-                    msg = msg.substr(lastDuelID_pos);
-                } else {
-                    arr.push(msg);
-                    msg = [];
-                }
-            } while (msg.length != 0);
-            return (arr);
-        }
-    }).catch(function (error) {
-        console.log(error);
-    });
-}
 
 function Download(message, args) {
     let dlLink = args[0];
@@ -361,31 +300,5 @@ function Download(message, args) {
         message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
     }
 }
-
-//Causes memory leaks :(
-function LoopCurrentRoomsMessages(message) {
-    discordmsgArray = [];
-
-    interval = setInterval(() => {
-        CurrentRoomsMessage().then(function (messageArray) {
-            for (let i = messageArray.length; i < discordmsgArray.length; i++) {
-                discordmsgArray[i].delete();
-                discordmsgArray.splice(i, 1);
-            }
-            for (let i = 0; i < discordmsgArray.length; i++) {
-                discordmsgArray[i].edit(messageArray[i]);
-            }
-            for (let i = discordmsgArray.length; i < messageArray.length; i++) {
-                message.channel.send(messageArray[i]).then((m) => {
-                    discordmsgArray.push(m);
-                });
-            }
-        }).catch((err) => {
-            console.log(err)
-        });
-    }, 2500);
-    return;
-}
-
 
 client.login(password);

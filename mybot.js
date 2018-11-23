@@ -165,7 +165,9 @@ client.on("message", (message) => {
                 {
                     if (getcurrentrooms != "") {
                         getcurrentrooms.StopSending();
-                        getcurrentrooms = "";
+                        getcurrentrooms="";
+                    }else{
+                        message.channel.send("Nothing to stop");
                     }
                     break;
                 }

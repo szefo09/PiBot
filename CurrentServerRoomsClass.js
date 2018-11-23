@@ -97,6 +97,8 @@ class CurrentServerRooms {
             clearInterval(this.interval);
             this.interval = "";
             this.message.channel.send("Sorry, I'll stop editing those!");
+            this.message="";
+            this.discordmsgArray="";
         }
     }
 }

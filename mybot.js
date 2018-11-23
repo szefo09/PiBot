@@ -166,7 +166,7 @@ client.on("message", (message) => {
                             discMsg.delete();
                         }
                         discordmsgArray = [];
-                        clearInterval(interval);
+                        client.clearInterval(interval);
                         interval = 0;
                         message.channel.send("Sorry, I'll stop editing those!");
                     }
@@ -205,6 +205,7 @@ client.on("message", (message) => {
                 }
         }
     }
+    return;
 });
 /**
  * @returns string
@@ -361,6 +362,7 @@ function Download(message, args) {
     }
 }
 
+//Causes memory leaks :(
 function LoopCurrentRoomsMessages(message) {
     discordmsgArray = [];
 
@@ -381,7 +383,6 @@ function LoopCurrentRoomsMessages(message) {
         }).catch((err) => {
             console.log(err)
         });
-
     }, 2500);
     return;
 }

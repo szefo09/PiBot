@@ -91,9 +91,9 @@ class CurrentServerRooms {
     }
     StopSending() {
         if (this.interval != "") {
-            for (let discMsg of this.discordmsgArray) {
-                discMsg.delete();
-            }
+            // for (let discMsg of this.discordmsgArray) {
+            //     discMsg.delete();
+            // }
             clearInterval(this.interval);
             this.interval = "";
             this.message.channel.send("Sorry, I'll stop editing those!");

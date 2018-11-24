@@ -56,6 +56,7 @@ client.on("message", (message) => {
     //non-admin commands
     if (command === 'help') {
         message.channel.send("Available Commands:\n!id\n!ping\n!reee\n!rape\n!get-temp\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
+        return;
     }
     if (command === 'id') {
         message.channel.send(message.author.id);
@@ -67,6 +68,7 @@ client.on("message", (message) => {
     }
     if (command === 'rape') {
         message.channel.send("N-No... Don't! Yamete Kudasai Senpai!!");
+        return;
     }
     if (command === "get-deckssave") {
         compressing.compressDir('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip')
@@ -76,6 +78,7 @@ client.on("message", (message) => {
                 })
             })
             .catch();
+            return;
     }
     if (command === "get-duellog") {
         compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
@@ -87,14 +90,17 @@ client.on("message", (message) => {
             .catch((reason) => {
                 message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
             });
+            return;
     }
     if (command === "reee") {
 
         message.channel.send("Relax " + client.emojis.random(2).toString());
+        return;
     }
     if (command === "get-temp") {
         GetTemperatureOfThePi().then((temp) => {
             message.channel.send(temp);
+            return;
         });
     }
 
@@ -203,6 +209,7 @@ client.on("message", (message) => {
                     return;
                 }
         }
+        return;
     }
     return;
 });

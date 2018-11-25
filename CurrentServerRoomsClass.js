@@ -2,8 +2,8 @@
 let data = require("./data.js");
 let getJSON = require('get-json');
 class CurrentServerRooms {
-    constructor(message) {
-        this.message = message;
+    constructor() {
+        this.message="";
         this.discordmsgArray = [];
         this.interval = "";
     }
@@ -65,7 +65,8 @@ class CurrentServerRooms {
             console.log(error);
         });
     }
-    LoopMessages() {
+    LoopMessages(message) {
+        this.message=message;
         let obj = this;
         this.interval = setInterval(() => {
             this.Send(obj);
@@ -99,6 +100,8 @@ class CurrentServerRooms {
             this.message.channel.send("Sorry, I'll stop editing those!");
             this.message="";
             this.discordmsgArray="";
+        }else{
+            console.log("Nothing to stop!");
         }
     }
 }

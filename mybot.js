@@ -13,7 +13,7 @@ let data = require("./data.js");
 /**
  * @type {CurrentServerRooms}
  */
-let getcurrentrooms = "";
+const getcurrentrooms = new CurrentServerRooms();
 
 let password = data.psswd;
 const prefix = data.token;
@@ -169,19 +169,13 @@ client.on("message", (message) => {
 
             case 'stop':
                 {
-                    if (getcurrentrooms != "") {
-                        getcurrentrooms.StopSending();
-                        getcurrentrooms="";
-                    }else{
-                        message.channel.send("Nothing to stop");
-                    }
+                    getcurrentrooms.StopSending();
                     break;
                 }
 
             case 'getcurrentrooms':
                 {
-                    getcurrentrooms = new CurrentServerRooms(message);
-                    getcurrentrooms.LoopMessages();
+                    getcurrentrooms.LoopMessages(message);
                     break;
                 }
 

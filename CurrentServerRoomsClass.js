@@ -99,7 +99,7 @@ class CurrentServerRooms {
             this.interval = "";
             this.message.channel.send("Sorry, I'll stop editing those!");
             this.message="";
-            this.discordmsgArray="";
+            this.discordmsgArray=[];
         }else{
             console.log("Nothing to stop!");
         }

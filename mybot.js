@@ -1,20 +1,14 @@
+const { StopSendingRoomMessages, LoopRoomMessages } = require("./RoomMessageFunctions");
 'use strict';
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const compressing = require('compressing').zip;
-const {
-    CurrentServerRooms
-} = require("./CurrentServerRoomsClass");
+const commands = require("./commands/commands.js");
+const data = require("./data.js");
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
-let commands = require("./commands/commands.js");
-let data = require("./data.js");
-
-/**
- * @type {CurrentServerRooms}
- */
-const getcurrentrooms = new CurrentServerRooms();
-
+exports.discordmsgArray = [];
+exports.interval = "";
 let password = data.psswd;
 const prefix = data.token;
 client.on("ready", () => {
@@ -169,13 +163,13 @@ client.on("message", (message) => {
 
             case 'stop':
                 {
-                    getcurrentrooms.StopSending();
+                    StopSendingRoomMessages(message);
                     break;
                 }
 
             case 'getcurrentrooms':
                 {
-                    getcurrentrooms.LoopMessages(message);
+                    LoopRoomMessages(message);
                     break;
                 }
 

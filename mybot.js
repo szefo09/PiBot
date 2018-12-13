@@ -178,6 +178,10 @@ client.on("message", (message) => {
                     ShowDasboard(message);
                     break;
                 }
+            case 'logs':{
+                ShowLogs(message);
+                break;
+            }
 
             case 'clearchat':
                 {
@@ -225,6 +229,18 @@ function ShowDasboard(message) {
         console.log('stderr: ' + data.toString());
     });
     dashboard.on('exit', function (code) {
+        console.log('child process exited with code ' + code.toString());
+    });
+}
+function ShowLogs(message) {
+    let logs = spawn('./logs.sh');
+    logs.stdout.on('data', (data) => {
+        message.channel.send(`\n${data}`);
+    });
+    logs.stderr.on('data', function (data) {
+        console.log('stderr: ' + data.toString());
+    });
+    logs.on('exit', function (code) {
         console.log('child process exited with code ' + code.toString());
     });
 }

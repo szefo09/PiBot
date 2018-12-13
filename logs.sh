@@ -1,1 +1,1 @@
-sudo pm2 logs
+npm update -y

@@ -238,10 +238,10 @@ function ShowLogs(message) {
         message.channel.send(`\n${data}`);
     });
     logs.stderr.on('data', function (data) {
-        console.log('stderr: ' + data.toString());
+        //console.log('stderr: ' + data.toString());
     });
     logs.on('exit', function (code) {
-        console.log('child process exited with code ' + code.toString());
+        //console.log('child process exited with code ' + code.toString());
     });
 }
 

@@ -1,2 +1,2 @@
 cd /home/pi/server/ygopro-server
-sudo pm2 logs 1
+sudo pm2 logs 2

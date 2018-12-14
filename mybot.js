@@ -7,11 +7,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const commands = require("./commands/commands.js");
 const data = require("./data.js");
-const {
-    zip,
-    zipAsync,
-    zipSync
-} = require('ya-zip');
+const compressing = require('compressing');
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
 exports.discordmsgArray = [];
@@ -72,43 +68,43 @@ client.on("message", (message) => {
         return;
     }
     if (command === "get-deckssave") {
-        // compressing.compressDir('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip')
-        //     .then(() => {
-        //         message.channel.send("Your decks_save.zip: ", {
-        //             files: ["/media/pi/usb/decks_save.zip"]
-        //         })
-        //     })
-        //     .catch();
-        zip('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip', (err) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            message.channel.send("Your decks_save.zip: ", {
-                files: ["/media/pi/usb/decks_save.zip"]
+        compressing.compressDir('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip')
+            .then(() => {
+                message.channel.send("Your decks_save.zip: ", {
+                    files: ["/media/pi/usb/decks_save.zip"]
+                })
             })
-        })
+            .catch();
+        // zip('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip', (err) => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+        //     message.channel.send("Your decks_save.zip: ", {
+        //         files: ["/media/pi/usb/decks_save.zip"]
+        //     })
+        // })
         return;
     }
     if (command === "get-duellog") {
-        // compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
-        //     .then(() => {
-        //         message.channel.send("Your duel-log.zip: ", {
-        //             files: ["/media/pi/usb/duel_log.zip"]
-        //         })
-        //     })
-        //     .catch((reason) => {
-        //         message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
-        //     });
-        zip('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip', (err) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            message.channel.send("Your duel-log.zip: ", {
-                files: ["/media/pi/usb/duel_log.zip"]
+        compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
+            .then(() => {
+                message.channel.send("Your duel-log.zip: ", {
+                    files: ["/media/pi/usb/duel_log.zip"]
+                })
             })
-        })
+            .catch((reason) => {
+                message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
+            });
+        // zip('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip', (err) => {
+        //     if (err) {
+        //         console.log(err);
+        //         return;
+        //     }
+        //     message.channel.send("Your duel-log.zip: ", {
+        //         files: ["/media/pi/usb/duel_log.zip"]
+        //     })
+        // })
         return;
     }
     if (command === "reee") {

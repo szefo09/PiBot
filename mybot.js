@@ -7,6 +7,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const commands = require("./commands/commands.js");
 const data = require("./data.js");
+const getJSON = require('get-json');
 const compressing = require('compressing').zip;
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
@@ -52,7 +53,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!id\n!ping\n!reee\n!rape\n!get-temp\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
+        message.channel.send("Available Commands:\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
         return;
     }
     if (command === 'id') {
@@ -174,6 +175,11 @@ client.on("message", (message) => {
                     exec(commands.restartPi);
                     break;
                 }
+            case 'shout':
+                {
+                    Shout(message,args);
+                    break;
+                }    
 
             case 'update-bot':
                 {
@@ -265,6 +271,17 @@ async function DeleteMessages(message, args) {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
 
     }
+}
+
+function Shout(message,args){
+    let shout="";
+    shout = args.join(" ")
+    let url = `http://${data.serverIP}:${data.serverPort}/api/message?shout=${shout}&pass=${data.serverPassword}`;
+    console.log(shout);
+  
+    return getJSON(encodeURI(url)).catch(function (){
+        message.channel.send(`Message "${decodeURI(encodeURI(shout))}" has been sent to the Server!`);
+    });
 }
 
 function Download(message, args) {

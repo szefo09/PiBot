@@ -45,7 +45,7 @@ function RoomMessage() {
                         duelers.push(room.users[j]);
                     }
                 }
-                msg += `\nPlayers:${duelers.length}\n`;
+                msg += `\nPlayers: (${duelers.length})\n`;
                 for (let d in duelers) {
                     msg += `${duelers[d].name} `;
                     if(duelers[d].ip!==null){

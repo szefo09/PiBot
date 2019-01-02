@@ -55,8 +55,9 @@ function RoomMessage() {
                         if(duelers[d].status.score>0){
                         msg+=`Wins: ${duelers[d].status.score} `;
                         }
-                        msg+=`LP: ${duelers[d].status.lp} Cards: ${duelers[d].status.cards}\n`;
+                        msg+=`LP: ${duelers[d].status.lp} Cards: ${duelers[d].status.cards}`;
                     }
+                    msg+="\n";
                 }
                 if (watchers.length > 0) {
                     msg += "\nViewers: ";

@@ -131,9 +131,9 @@ client.on("message", (message) => {
 
             case 'restart-server':
                 {
-                    message.channel.send("restarting the server!");
+                    message.channel.send(`restarting the server in ${args[0]} minutes!`);
+                    RestartServer(message,args);
                     console.log(commands.restartServer);
-                    exec(commands.restartServer);
                     break;
                 }
 
@@ -336,4 +336,37 @@ function Download(message, args) {
     }
 }
 
+function RestartServer(message,args){
+    let minutes = args[0];
+    if(minutes==null){
+        minutes = 1;
+    }
+    const millisecondsPerMinute = 60000;
+    let restartDate = new Date()+(minutes*millisecondsPerMinute);
+    let restartInterval = setInterval(function() {
+
+        // Get todays date and time
+        let now = new Date().getTime();
+          
+        // Find the distance between now and the count down date
+        let distance = restartDate - now;
+        // Time calculations for minutes and seconds
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if(minutes>0){
+            Shout(message,[`Server restart in ${minutes} minutes!`]);
+        }else if(seconds>0){
+            Shout(message,[`Server restart in ${seconds} seconds!`]);
+        }
+        // If the count down is over, write some text 
+        if (distance < 0) {
+          clearInterval(restartInterval);
+          Shout(message,[`Server restart NOW!`]);
+          exec(commands.restartServer);
+        }
+      }, millisecondsPerMinute/2);
+
+    
+
+}
 client.login(password);

@@ -34,7 +34,7 @@ function RoomMessage() {
             let rooms = response.rooms;
             for (let i in rooms) {
                 let room = rooms[i];
-                msg += `Duel ID: ${i} Name: ${room.roomname} `;
+                msg += `Duel Nr: ${i} ID: ${room.roomid} Name: ${room.roomname} `;
                 let duelers = [];
                 let watchers = [];
                 for (let j in room.users) {

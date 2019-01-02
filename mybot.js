@@ -339,11 +339,11 @@ function Download(message, args) {
 function RestartServer(message,args){
     let minutes = args[0];
     if(minutes==null){
-        minutes = 1;
+        minutes = 10;
     }
     const millisecondsPerMinute = 60000;
     let restartDate = new Date().getTime()+(minutes*millisecondsPerMinute);
-    let restartInterval = setInterval(function() {
+    function CheckTime() {
 
         // Get todays date and time
         let now = new Date().getTime();
@@ -365,7 +365,9 @@ function RestartServer(message,args){
           exec(commands.restartServer);
           clearInterval(restartInterval);
         }
-      }, millisecondsPerMinute/2);
+      }
+    CheckTime();
+    let restartInterval = setInterval(CheckTime, millisecondsPerMinute/2);
 
     
 

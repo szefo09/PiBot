@@ -49,16 +49,19 @@ function RoomMessage() {
                 for (let d in duelers) {
                     msg += `${duelers[d].name} `;
                     if(duelers[d].ip!==null){
-                        msg+=`${duelers[d].ip}`;
+                        msg+=`IP: ${duelers[d].ip} `;
                     }
                     if(duelers[d].status!==null){
-                        msg+=`${duelers[d].status.score} ${duelers[d].status.lp} ${duelers[d].status.cards}`;
+                        if(duelers[d].status.score>0){
+                        msg+=`Wins: ${duelers[d].status.score} `;
+                        }
+                        msg+=`Lp: ${duelers[d].status.lp} Cards: ${duelers[d].status.cards}\n`;
                     }
                 }
                 if (watchers.length > 0) {
                     msg += "\nViewers: ";
                     for (let w in watchers) {
-                        msg += `${watchers[w].name} ${watchers[w].ip} `;
+                        msg += `${watchers[w].name} IP: ${watchers[w].ip} `;
                     }
                 }
                 msg += "\nStatus of the game: " + room.istart + "\n\n";

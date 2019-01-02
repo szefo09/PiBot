@@ -45,7 +45,7 @@ function RoomMessage() {
                         duelers.push(room.users[j]);
                     }
                 }
-                msg += "\nPlayers: ";
+                msg += "\nPlayers:\n";
                 for (let d in duelers) {
                     msg += `${duelers[d].name} `;
                     if(duelers[d].ip!==null){
@@ -55,7 +55,7 @@ function RoomMessage() {
                         if(duelers[d].status.score>0){
                         msg+=`Wins: ${duelers[d].status.score} `;
                         }
-                        msg+=`Lp: ${duelers[d].status.lp} Cards: ${duelers[d].status.cards}\n`;
+                        msg+=`LP: ${duelers[d].status.lp} Cards: ${duelers[d].status.cards}\n`;
                     }
                 }
                 if (watchers.length > 0) {

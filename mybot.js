@@ -342,7 +342,7 @@ function RestartServer(message,args){
         minutes = 1;
     }
     const millisecondsPerMinute = 60000;
-    let restartDate = new Date()+(minutes*millisecondsPerMinute);
+    let restartDate = new Date().getTime()+(minutes*millisecondsPerMinute);
     let restartInterval = setInterval(function() {
 
         // Get todays date and time
@@ -360,9 +360,10 @@ function RestartServer(message,args){
         }
         // If the count down is over, write some text 
         if (distance < 0) {
-          clearInterval(restartInterval);
+          
           Shout(message,[`Server restart NOW!`]);
           exec(commands.restartServer);
+          clearInterval(restartInterval);
         }
       }, millisecondsPerMinute/2);
 

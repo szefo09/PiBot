@@ -74,7 +74,7 @@ function RoomMessage() {
             let maxLength = 2000; //max message size for discord.
             do {
                 if (msg.length > maxLength) {
-                    let lastDuelID_pos = msg.substr(0, maxLength).lastIndexOf("Duel ID:");
+                    let lastDuelID_pos = msg.substr(0, maxLength).lastIndexOf("Duel Nr:");
                     let messageSubstring = "\n" + msg.substr(0, lastDuelID_pos) + "\n";
                     arr.push(messageSubstring);
                     msg = msg.substr(lastDuelID_pos);

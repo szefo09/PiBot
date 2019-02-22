@@ -18,6 +18,9 @@ const prefix = data.token;
 client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
+    client.user.setActivity("PLAYING");
+    client.user.setGame("YGOPro2","http://srvpro.ygo233.com/dashboard-en.html");
+
 });
 
 client.on("message", (message) => {

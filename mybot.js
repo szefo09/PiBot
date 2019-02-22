@@ -20,7 +20,7 @@ client.on("ready", () => {
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
     client.user.setActivity("YGOPro2",{
         url:"http://srvpro.ygo233.com/dashboard-en.html",
-        type:"STREAMING"
+        type:"WATCHING"
     });
 
 });

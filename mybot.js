@@ -20,7 +20,7 @@ client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
         updatePlayerCount();
-        setTimeout(updatePlayerCount, 60000);
+        setTimeout(updatePlayerCount, 15000);
 });
 
 function updatePlayerCount(){
@@ -30,7 +30,7 @@ function updatePlayerCount(){
             type:"WATCHING"
         });
     })
-    setTimeout(updatePlayerCount, 60000);
+    setTimeout(updatePlayerCount, 15000);
 }
 client.on("message", (message) => {
     let admin = false;

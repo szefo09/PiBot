@@ -30,6 +30,7 @@ function updatePlayerCount(){
             type:"WATCHING"
         });
     })
+    setTimeout(updatePlayerCount, 60000);
 }
 client.on("message", (message) => {
     let admin = false;

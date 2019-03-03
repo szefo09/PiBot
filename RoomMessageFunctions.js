@@ -26,8 +26,20 @@ function SendRoomMessage(message) {
         console.log(err);
     });
 }
+function RoomCount(){
+    let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
+    return getJSON(url).then(function (response) {
+        let msg = '';
+        if (response != null) {
+            return response.rooms.length;
+        }
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
 function RoomMessage() {
     let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
+    console.log(url); 
     return getJSON(url).then(function (response) {
         let msg = '';
         if (response != null) {
@@ -100,4 +112,5 @@ function StopSendingRoomMessages(message) {
         console.log("Nothing to stop!");
     }
 }
+exports.RoomCount = RoomCount;
 exports.StopSendingRoomMessages = StopSendingRoomMessages;

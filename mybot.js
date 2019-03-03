@@ -1,6 +1,7 @@
 const {
     StopSendingRoomMessages,
-    LoopRoomMessages
+    LoopRoomMessages,
+    RoomCount
 } = require("./RoomMessageFunctions");
 'use strict';
 const Discord = require("discord.js");
@@ -18,13 +19,18 @@ const prefix = data.token;
 client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
-    client.user.setActivity("YGOPro2",{
-        url:"http://srvpro.ygo233.com/dashboard-en.html",
-        type:"WATCHING"
-    });
-
+        updatePlayerCount();
+        setTimeout(updatePlayerCount, 60000);
 });
 
+function updatePlayerCount(){
+    RoomCount().then(function(result) {
+        client.user.setActivity(`YGOPro2 - ${result} rooms`,{
+            url:"http://srvpro.ygo233.com/dashboard-en.html",
+            type:"WATCHING"
+        });
+    })
+}
 client.on("message", (message) => {
     let admin = false;
     if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {

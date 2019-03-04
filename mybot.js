@@ -19,8 +19,8 @@ const prefix = data.token;
 client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
-        updatePlayerCount();
-        setTimeout(updatePlayerCount, 30000);
+        //updatePlayerCount();
+       // setTimeout(updatePlayerCount, 30000);
 });
 
 function updatePlayerCount(){
@@ -38,7 +38,7 @@ client.on("message", (message) => {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
     }
     if (message.content.toLowerCase().includes("http") || message.attachments.array().length > 0) {
-        for(let i=0; i>=Math.floor(Math.random() * 8) + 1;i++){
+        for(let z=0; z<=Math.floor(Math.random() * 8) + 3;z++){
             message.react(client.emojis.random());
         }                
     }

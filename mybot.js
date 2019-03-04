@@ -279,10 +279,11 @@ async function DeleteMessages(message, args) {
         });
         console.log(fetched.size + ' messages found, deleting...');
         message.channel.bulkDelete(fetched).catch(error => {
-            message.channel.send("Error: " + error + "\nTrying manual deletion.")
+        let m = message.channel.send("Error: " + error + "\nTrying manual deletion.")
         fetched.forEach(element => {
             element.delete();
         });
+        m.delete();
     });
     } catch {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());

@@ -284,11 +284,12 @@ async function DeleteMessages(message, args) {
             element.delete();
         });
     });
+    message.channel.send("Removed "+ fetched.size +" messages");
     } catch {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
 
     }
-    message.channel.send("Removed "+ fetched.size +" messages");
+
 }
 
 function Shout(message,args){

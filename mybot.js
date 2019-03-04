@@ -38,7 +38,6 @@ client.on("message", (message) => {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
     }
     if (message.content.toLowerCase().includes("http") || message.attachments.array().length > 0) {
-        let random = ;
         for(let i=0; i>=Math.floor(Math.random() * 8) + 1;i++){
             message.react(client.emojis.random());
         }                

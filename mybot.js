@@ -270,9 +270,6 @@ function ShowDasboard(message) {
 
 async function DeleteMessages(message, args) {
     message.delete();
-    if (args[0] > 99) {
-        args[0] == 99;
-    }
     try {
         const fetched = await message.channel.fetchMessages({
             limit: args[0]

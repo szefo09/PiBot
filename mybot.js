@@ -273,6 +273,16 @@ async function DeleteMessages(message, args) {
     if (args[0] > 99) {
         args[0] == 99;
     }
+    if(args[0]==-1){
+        async () => {
+            let fetched;
+            do {
+              fetched = await channel.fetchMessages({limit: 100});
+              message.channel.bulkDelete(fetched);
+            }
+            while(fetched.size >= 2);
+          }
+    }
     try {
         const fetched = await message.channel.fetchMessages({
             limit: args[0]

@@ -288,6 +288,7 @@ async function DeleteMessages(message, args) {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
 
     }
+    message.channel.send("Removed "+ fetched.size +" messages");
 }
 
 function Shout(message,args){

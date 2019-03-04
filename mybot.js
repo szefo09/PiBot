@@ -278,7 +278,9 @@ async function DeleteMessages(message, args) {
             let fetched;
             do {
               fetched = await channel.fetchMessages({limit: 100});
-              message.channel.bulkDelete(fetched);
+              fetched.forEach(element => {
+                element.delete();
+            });
             }
             while(fetched.size >= 2);
           }

@@ -38,19 +38,10 @@ client.on("message", (message) => {
         message.channel.send("<@" + message.author.id + ">" + " No U!");
     }
     if (message.content.toLowerCase().includes("http") || message.attachments.array().length > 0) {
-        message.react('👌').then(() => {
-            message.react("😂").then(() => {
-                message.react('💯').then(() => {
-                    if (message.channel.type == 'text') {
-                        message.react(client.emojis.random());
-                        message.react(client.emojis.random());
-                        message.react(client.emojis.random());
-                        message.react(client.emojis.random());
-                    }
-
-                })
-            })
-        });
+        let random = ;
+        for(let i=0; i>=Math.floor(Math.random() * 8) + 1;i++){
+            message.react(client.emojis.random());
+        }                
     }
     if (!message.content.startsWith(prefix) || message.author.bot) {
         return;

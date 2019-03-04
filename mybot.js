@@ -275,12 +275,15 @@ async function DeleteMessages(message, args) {
             limit: args[0]
         });
         console.log(fetched.size + ' messages found, deleting...');
-        message.channel.bulkDelete(fetched).catch(error => {
-        message.channel.send("Error: " + error + "\nTrying manual deletion.")
-        fetched.forEach(element => {
-            element.delete();
+        if(args[0]<=99){
+            message.channel.bulkDelete(fetched).catch(error => {
+                message.channel.send("Error: " + error + "\nTrying manual deletion.")});
+        }else{
+            fetched.forEach(element => {
+                element.delete();
         });
-    });
+        }
+
     } catch {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
 

@@ -27,7 +27,7 @@ function SendRoomMessage(message) {
     });
 }
 function RoomCount(){
-    let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
+    let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&username=${data.serverUser}&pass=${data.serverPassword}`;
     return getJSON(url).then(function (response) {
         let msg = '';
         if (response != null) {
@@ -38,7 +38,7 @@ function RoomCount(){
     });
 }
 function RoomMessage() {
-    let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&pass=${data.serverPassword}`;
+    let url = `http://${data.serverIP}:${data.serverPort}/api/getrooms?&username=${data.serverUser}&pass=${data.serverPassword}`;
     console.log(url); 
     return getJSON(url).then(function (response) {
         let msg = '';

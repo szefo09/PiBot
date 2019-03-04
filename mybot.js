@@ -19,8 +19,8 @@ const prefix = data.token;
 client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
-        //updatePlayerCount();
-       // setTimeout(updatePlayerCount, 30000);
+        updatePlayerCount();
+       /setTimeout(updatePlayerCount, 30000);
 });
 
 function updatePlayerCount(){

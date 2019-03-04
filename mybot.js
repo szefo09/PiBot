@@ -270,20 +270,20 @@ function ShowDasboard(message) {
 
 async function DeleteMessages(message, args) {
     message.delete();
+    if (args[0] > 99) {
+        args[0] == 99;
+    }
     try {
         const fetched = await message.channel.fetchMessages({
             limit: args[0]
         });
         console.log(fetched.size + ' messages found, deleting...');
-        if(args[0]<=99){
-            message.channel.bulkDelete(fetched).catch(error => {
-                message.channel.send("Error: " + error + "\nTrying manual deletion.")});
-        }else{
-            fetched.forEach(element => {
-                element.delete();
+        message.channel.bulkDelete(fetched).catch(error => {
+        message.channel.send("Error: " + error + "\nTrying manual deletion.")
+        fetched.forEach(element => {
+            element.delete();
         });
-        }
-
+    });
     } catch {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
 

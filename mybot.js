@@ -68,6 +68,9 @@ client.on("message", (message) => {
         if(dice.isNaN){
             return;
         }
+        if(dice<=0){
+            return;
+        }
         if(isNaN(amount)){
             let result = Math.floor(Math.random() * dice)+1;
             message.channel.send(`Result of your D${dice}: ${result}`);

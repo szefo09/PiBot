@@ -79,6 +79,9 @@ client.on("message", (message) => {
             message.channel.send(`Result of your D${dice}: ${result}`);
         }else
         {
+            if(amount<=0){
+                return;
+            }
             let result = [];
             for(let i = 0; i < amount ; i++)
             {

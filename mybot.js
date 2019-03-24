@@ -62,6 +62,23 @@ client.on("message", (message) => {
         message.channel.send(message.author.id);
         return;
     }
+    if (command === 'd'){
+        let dice = args[0];
+        let amount = args[1];
+        if(isNaN(amount)){
+            let result = (Math.random()%dice)+1;
+            message.channel.send(`Result of your D${amount}: ${result}`);
+        }else
+        {
+            let result = [];
+            for(let i = 0; i < amount ; i++)
+            {
+                result.push((Math.random()%dice)+1);
+            }
+            message.channel.send(`Result of your ${amount} D${amount}s: ${result.join(", ")}`);
+        }
+    }
+    
     if (command === 'ping') {
         message.channel.send("pong!");
         return;

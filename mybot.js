@@ -66,16 +66,16 @@ client.on("message", (message) => {
         let dice = args[0];
         let amount = args[1];
         if(isNaN(amount)){
-            let result = (Math.random()%dice)+1;
-            message.channel.send(`Result of your D${amount}: ${result}`);
+            let result = Math.floor(Math.random() * dice)+1;
+            message.channel.send(`Result of your D${dice}: ${result}`);
         }else
         {
             let result = [];
             for(let i = 0; i < amount ; i++)
             {
-                result.push((Math.random()%dice)+1);
+                result.push(Math.floor(Math.random() * dice)+1);
             }
-            message.channel.send(`Result of your ${amount} D${amount}s: ${result.join(", ")}`);
+            message.channel.send(`Result of your ${amount} D${dice}s: ${result.join(", ")}`);
         }
     }
     

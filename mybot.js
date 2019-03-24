@@ -73,6 +73,9 @@ client.on("message", (message) => {
         }
         if(isNaN(amount)){
             let result = Math.floor(Math.random() * dice)+1;
+            if(result.isNaN){
+                return;
+            }
             message.channel.send(`Result of your D${dice}: ${result}`);
         }else
         {
@@ -80,6 +83,9 @@ client.on("message", (message) => {
             for(let i = 0; i < amount ; i++)
             {
                 result.push(Math.floor(Math.random() * dice)+1);
+                if(result[i].isNaN){
+                    return;
+                }
             }
             message.channel.send(`Result of your ${amount} D${dice}s: ${result.join(", ")}`);
         }

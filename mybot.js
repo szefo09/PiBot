@@ -159,7 +159,7 @@ client.on("message", (message) => {
         switch (command) {
             case 'teamviewer':
             {
-                exec('sudo teamviewer --daemon restart');
+                exec('sudo teamviewer --daemon enable');
                 return;
             }
             case 'dl':

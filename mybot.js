@@ -159,15 +159,7 @@ client.on("message", (message) => {
         switch (command) {
             case 'teamviewer':
             {
-                if(args[0] == "on"){
-                    exec('sudo systemctl start teamviewerd.service');
-                    message.channel.send("Executed the ON command");
-                }
-                if(args[0] == "off"){
-                    exec('sudo systemctl stop teamviewerd.service');
-                    message.channel.send("Executed the OFF command");
-                }
-
+                exec('sudo teamviewer --daemon restart');
                 return;
             }
             case 'dl':

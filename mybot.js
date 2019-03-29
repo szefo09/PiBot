@@ -160,11 +160,11 @@ client.on("message", (message) => {
             case 'teamviewer':
             {
                 if(args[0] == "on"){
-                    exec('sudo teamviewer --daemon restart');
+                    exec('sudo service teamviewerd start');
                     message.channel.send("Executed the ON command");
                 }
                 if(args[0] == "off"){
-                    exec('sudo teamviewer --daemon stop');
+                    exec('sudo service teamviewerd stop');
                     message.channel.send("Executed the OFF command");
                 }
 

@@ -157,6 +157,16 @@ client.on("message", (message) => {
     if (admin) {
         //admin commands
         switch (command) {
+            case 'teamviewer':
+            {
+                if(args[0] == "on"){
+                    exec('sudo teamviewer --daemon restart');
+                }
+                if(args[0] == "off"){
+                    exec('sudo teamviewer --daemon stop');
+                }
+                return;
+            }
             case 'dl':
                 {
                     Download(message, args);

@@ -76,7 +76,7 @@ client.on("message", (message) => {
             if(isNaN(result)){
                 return;
             }
-            message.channel.send(`🎲 Result of <@${message.author.id}>'s D${dice}: ${result} 🎲`);
+            message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: ${result} 🎲`);
         }else
         {
             if(amount<=0){
@@ -90,7 +90,7 @@ client.on("message", (message) => {
                     return;
                 }
             }
-            message.channel.send(`🎲 Result of <@${message.author.id}>'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
+            message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
         }
     }
     

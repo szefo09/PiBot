@@ -9,7 +9,7 @@ module.exports = {
     getPiTemp: {"command":"vcgencmd","property":["measure_temp"]},
     getLogs: 
     {
-        "command":"pm2",
-        "property":["logs","2"]
+        "command":"sudo",
+        "property":["pm2","logs","2"]
     }
 }

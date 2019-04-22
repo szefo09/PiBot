@@ -296,8 +296,7 @@ async function GetLogsOfThePi() {
     /**
      * @type {string} value
      */
-    for await (let data of temp.stdout) {
-        return `\n${data}`;
+    return await temp.stdout;
     }
 
 }

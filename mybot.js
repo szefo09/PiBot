@@ -153,6 +153,12 @@ client.on("message", (message) => {
             return;
         });
     }
+    if (command === "get-logs") {
+        GetLogsOfThePi().then((logs) => {
+            message.channel.send(logs);
+            return;
+        });
+    }
 
     if (admin) {
         //admin commands
@@ -278,6 +284,20 @@ async function GetTemperatureOfThePi() {
      */
     for await (let data of temp.stdout) {
         return `\n${data}`.replace("temp=", "Temperature of the Pi=");
+    }
+
+}
+/**
+ * @returns string
+ */
+async function GetLogsOfThePi() {
+    let com = commands.getLogs;
+    let temp = spawn(com.command, com.property);
+    /**
+     * @type {string} value
+     */
+    for await (let data of temp.stdout) {
+        return `\n${data}`;
     }
 
 }

@@ -157,6 +157,11 @@ client.on("message", (message) => {
     if (admin) {
         //admin commands
         switch (command) {
+            case 'teamviewer':
+            {
+                exec('sudo teamviewer --daemon enable');
+                return;
+            }
             case 'dl':
                 {
                     Download(message, args);

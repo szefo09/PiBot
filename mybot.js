@@ -298,8 +298,6 @@ async function GetLogsOfThePi() {
      */
     return await temp.stdout;
     }
-
-}
 //PM2 List of proccesses
 function ShowDasboard(message) {
     let dashboard = spawn('./list.sh');

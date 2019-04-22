@@ -153,12 +153,6 @@ client.on("message", (message) => {
             return;
         });
     }
-    if (command === "get-logs") {
-        GetLogsOfThePi().then((logs) => {
-            message.channel.send(logs);
-            return;
-        });
-    }
 
     if (admin) {
         //admin commands
@@ -287,17 +281,6 @@ async function GetTemperatureOfThePi() {
     }
 
 }
-/**
- * @returns string
- */
-async function GetLogsOfThePi() {
-    let com = commands.getLogs;
-    let temp = spawn(com.command, com.property);
-    /**
-     * @type {string} value
-     */
-    return await temp.stdout;
-    }
 //PM2 List of proccesses
 function ShowDasboard(message) {
     let dashboard = spawn('./list.sh');

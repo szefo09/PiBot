@@ -10,6 +10,6 @@ module.exports = {
     getLogs: 
     {
         "command":"sudo",
-        "property":["pm2","logs","2"]
+        "property":["pm2","logs"]
     }
 }

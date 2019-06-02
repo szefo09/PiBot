@@ -103,7 +103,7 @@ client.on("message", (message) => {
         return;
     }
     if (command === "get-deckssave") {
-        compressing.compressDir('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip')
+        compressing.compressDir('/media/pi/usb/decks_save', '/media/pi/usb/decks_save.zip')
             .then(() => {
                 message.channel.send("Your decks_save.zip: ", {
                     files: ["/media/pi/usb/decks_save.zip"]

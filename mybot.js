@@ -347,6 +347,9 @@ function Download(message, args) {
     if (args[1]!=undefined && args[1].includes("/")) {
         name = args[1].split("/").pop();
         path = args[1].split("/", 1);
+        if(path.includes("..")){
+            return;
+        }
         let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
         exec(mkdircmd);
         path += "/";

@@ -313,25 +313,26 @@ function ShowDasboard(message) {
 
 async function DeleteMessages(message, args) {
     try {
-    message.delete();
-    if (args[0] > 99) {
-        args[0] == 99;
-    }
-    if (args[0] == -1) {
-        let fetched;
-        do {
-            fetched = await message.channel.fetchMessages({
-                limit: 100
-            });
-            fetched.forEach(element => {
-                element.delete();
-            });
+        message.delete();
+        if (args[0] > 99) {
+            args[0] == 99;
         }
-        while (fetched.size >= 2);
-        return;
-    }
-    
-        const fetched = await message.channel.fetchMessages({
+        let fetched;
+        if (args[0] == -1) {
+            
+            do {
+                fetched = await message.channel.fetchMessages({
+                    limit: 100
+                });
+                fetched.forEach(element => {
+                    element.delete();
+                });
+            }
+            while (fetched.size >= 2);
+            return;
+        }
+
+        fetched = await message.channel.fetchMessages({
             limit: args[0]
         });
         console.log(fetched.size + ' messages found, deleting...');
@@ -345,7 +346,6 @@ async function DeleteMessages(message, args) {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
         return;
     }
-    
 }
 
 function Shout(message, args) {

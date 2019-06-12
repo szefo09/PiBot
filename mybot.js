@@ -180,7 +180,7 @@ client.on("message", (message) => {
     }
     if (command === "get-temp") {
         GetTemperatureOfThePi().then((temp) => {
-            message.channel.send("🌡️ "+ temp );
+            message.channel.send(temp);
             return;
         });
     }
@@ -293,7 +293,7 @@ async function GetTemperatureOfThePi() {
      * @type {string} value
      */
     for await (let data of temp.stdout) {
-        return `\n${data}`.replace("temp=", "Temperature of the Pi=");
+        return `\n${data}`.replace("temp=", "🌡️ Temperature of the Pi=");
     }
 
 }

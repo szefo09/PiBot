@@ -312,6 +312,7 @@ function ShowDasboard(message) {
 }
 
 async function DeleteMessages(message, args) {
+    try {
     message.delete();
     if (args[0] > 99) {
         args[0] == 99;
@@ -329,7 +330,7 @@ async function DeleteMessages(message, args) {
         while (fetched.size >= 2);
         return;
     }
-    try {
+    
         const fetched = await message.channel.fetchMessages({
             limit: args[0]
         });

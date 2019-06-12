@@ -180,7 +180,7 @@ client.on("message", (message) => {
     }
     if (command === "get-temp") {
         GetTemperatureOfThePi().then((temp) => {
-            message.channel.send(temp + " 🌡️");
+            message.channel.send("🌡️ "+ temp );
             return;
         });
     }

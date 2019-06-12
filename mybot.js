@@ -343,9 +343,9 @@ async function DeleteMessages(message, args) {
         });
     } catch {
         message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
-
+        return;
     }
-
+    
 }
 
 function Shout(message, args) {

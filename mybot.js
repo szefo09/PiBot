@@ -105,7 +105,7 @@ client.on("message", (message) => {
             message.channel.send(`${feet}ft equals ${meters}m!`);
         } else {
             let meters = roundToTwo(feet * 0.3048);
-            let centimeters = roundToTwo(inch * 2.54) / 100;
+            let centimeters = roundToTwo(inch * 2.54 / 100);
             let result = meters + centimeters;
             message.channel.send(`${feet}ft and ${inch}in equals ${result}m!`);
         }

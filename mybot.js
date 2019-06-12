@@ -93,6 +93,18 @@ client.on("message", (message) => {
             message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
         }
     }
+
+    if (command === 'ft') {
+        let feet = args[0];
+        
+        if (isNaN(feet)) {
+            return;
+        }
+
+        let meters = roundToTwo(feet * 0.3048);
+        message.channel.send(`${feet}ft equals ${meters}m!`);
+
+    }
     
     if (command === 'ping') {
         message.channel.send("pong!");
@@ -393,6 +405,10 @@ function Download(message, args) {
     } else {
         message.channel.send("Wrong download link!\nUse !dl Link Name or !dl Link");
     }
+}
+
+function roundToTwo(num) {
+    return +(Math.round(num + "e+2") + "e-2");
 }
 
 function RestartServer(message,args){

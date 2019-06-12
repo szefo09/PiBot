@@ -55,7 +55,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
+        message.channel.send("Available Commands:\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
         return;
     }
     if (command === 'id') {
@@ -90,6 +90,7 @@ client.on("message", (message) => {
             }
             message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
         }
+        return;
     }
 
     if (command === 'ft') {
@@ -105,11 +106,22 @@ client.on("message", (message) => {
             message.channel.send(`${feet}ft equals ${meters}m!`);
         } else {
             let meters = roundToTwo(feet * 0.3048);
-            let centimeters = roundToTwo((inch * 2.54)/100);
+            let centimeters = roundToTwo((inch * 2.54) / 100);
             let result = roundToTwo(meters + centimeters);
             message.channel.send(`${feet}ft ${inch}in equals ${result}m!`);
         }
 
+        return;
+    }
+
+    if (command === 'lb') {
+        let pound = args[0];
+
+        if (isNaN(pound)) {
+            return;
+        }
+        let kilograms = roundToTwo(pound * 0.45359237);
+        message.channel.send(`${pound}lb equals ${kilograms}kg!`);
         return;
     }
 

@@ -103,12 +103,12 @@ client.on("message", (message) => {
 
         if (isNaN(inch)) {
             let meters = roundToTwo(feet * 0.3048);
-            message.channel.send(`${feet}ft equals ${meters}m!`);
+            message.channel.send(`${feet}ft equals ${meters}m ♿`);
         } else {
             let meters = roundToTwo(feet * 0.3048);
             let centimeters = roundToTwo((inch * 2.54) / 100);
             let result = roundToTwo(meters + centimeters);
-            message.channel.send(`${feet}ft ${inch}in equals ${result}m!`);
+            message.channel.send(`${feet}ft ${inch}in equals ${result}m ♿`);
         }
 
         return;
@@ -121,7 +121,7 @@ client.on("message", (message) => {
             return;
         }
         let kilograms = roundToTwo(pound * 0.45359237);
-        message.channel.send(`${pound}lb equals ${kilograms}kg!`);
+        message.channel.send(`${pound}lb equals ${kilograms}kg ⚖️`);
         return;
     }
 
@@ -180,7 +180,7 @@ client.on("message", (message) => {
     }
     if (command === "get-temp") {
         GetTemperatureOfThePi().then((temp) => {
-            message.channel.send(temp);
+            message.channel.send(temp + " 🌡️");
             return;
         });
     }

@@ -325,7 +325,7 @@ async function DeleteMessages(message, args) {
                     limit: 100
                 });
                 fetched.forEach(element => {
-                    element.delete();
+                   await element.delete();
                 });
             }
             while (fetched.size >= 2);
@@ -339,7 +339,7 @@ async function DeleteMessages(message, args) {
         message.channel.bulkDelete(fetched).catch(error => {
             message.channel.send("Error: " + error + "\nTrying manual deletion.")
             fetched.forEach(element => {
-                element.delete();
+               await element.delete();
             });
         });
     } catch {

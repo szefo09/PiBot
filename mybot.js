@@ -34,14 +34,14 @@ function updatePlayerCount() {
 }
 client.on("message", (message) => {
     let admin = false;
-    if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
-        message.channel.send("<@" + message.author.id + ">" + " No U!");
-    }
-    if (message.content.toLowerCase().includes("http") || message.attachments.array().length > 0) {
-        for (let z = 0; z <= Math.floor(Math.random() * 8) + 3; z++) {
-            message.react(client.emojis.random());
-        }
-    }
+    // if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
+    //     message.channel.send("<@" + message.author.id + ">" + " No U!");
+    // }
+    // if (message.content.toLowerCase().includes("http") || message.attachments.array().length > 0) {
+    //     for (let z = 0; z <= Math.floor(Math.random() * 8) + 3; z++) {
+    //         message.react(client.emojis.random());
+    //     }
+    // }
     if (!message.content.startsWith(prefix) || message.author.bot) {
         return;
     }

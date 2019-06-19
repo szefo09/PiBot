@@ -324,7 +324,7 @@ async function DeleteMessages(message, args) {
                 fetched = await message.channel.fetchMessages({
                     limit: 100
                 });
-                fetched.forEach(element => {
+                fetched.forEach(async element => {
                    await element.delete();
                 });
             }
@@ -336,9 +336,9 @@ async function DeleteMessages(message, args) {
             limit: args[0]
         });
         console.log(fetched.size + ' messages found, deleting...');
-        message.channel.bulkDelete(fetched).catch(error => {
+        message.channel.bulkDelete(fetched).catch(async error => {
             message.channel.send("Error: " + error + "\nTrying manual deletion.")
-            fetched.forEach(element => {
+            fetched.forEach(async element => {
                await element.delete();
             });
         });

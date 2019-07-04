@@ -10,6 +10,7 @@ const commands = require("./commands/commands.js");
 const data = require("./data.js");
 const getJSON = require('get-json');
 const compressing = require('compressing').zip;
+const moment = require('moment');
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
 exports.discordmsgArray = [];
@@ -55,7 +56,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n");
+        message.channel.send("Available Commands:\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n");
         return;
     }
     if (command === 'id') {
@@ -273,6 +274,42 @@ client.on("message", (message) => {
                 message.channel.send("Przepraszam. " + client.emojis.random());
                 exec("sudo pm2 restart mybot");
                 break;
+            }
+
+            case 'backup-data': {
+                var date = moment().format("DD_MM_YY").toString();
+                var optionsConfig = {
+                    cwd: "/home/pi/server/ygopro-server/config",
+                    env: process.env
+                }
+                var optionsDrive = {
+                    cwd: "/media/pi/usb",
+                    env: process.env
+                }
+                exec(`zip -qr /home/ftpuser/backup/replays/replays_${date}.zip current_replays`, optionsDrive).on('exit', () => {
+                    exec(`zip -qr /media/pi/usb/replays/replays_${date}.zip current_replays`, optionsDrive).on('exit', () => {
+                        exec("rm -rf current_replays/*", optionsDrive)
+                        console.log(`backup replays${date}`);
+                        exec(`zip -qr /home/ftpuser/backup/decks_saves/decks_save_${date}.zip decks_save`, optionsDrive).on("exit", () => {
+                            exec(`zip -qr /media/pi/usb/deckssaves/decks_save_${date}.zip decks_save`, optionsDrive).on('exit', () => {
+                                exec("rm -rf decks_save/*", optionsDrive);
+                                console.log(`backup decks_save${date}`);
+                                exec(`zip -qr /home/ftpuser/backup/duel_logs/duel_log${date}.zip duel_log.json`, optionsConfig).on('exit', () => {
+                                    exec(`cp duel_log.json /media/pi/usb/duel_logs/duel_log${date}.json`, optionsConfig).on('exit', () => {
+                                        exec("rm -rf duel_log.json", optionsConfig).on('exit', () => {
+                                            console.log(`backup duel_log${date}.json`);
+                                            console.log("restart server.");
+                                            message.channel.send("Backup successful!")
+                                            exec("sudo pm2 restart all");
+                                        });
+    
+                                    });
+                                });
+                            });
+    
+                        });
+                    });
+                });
             }
 
             default: {

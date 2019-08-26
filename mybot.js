@@ -69,11 +69,11 @@ client.on("message", (message) => {
         fs.readFile("nowaSesja.txt", "utf-8", (err, data) => {
             if (err) { message.channel.send("brak ustawionej nowej sesji.")}
             msg = data;
+            if(msg != null)
+            {
+                message.channel.send(`Sesja jest o: ${msg}`);
+            }
         })
-        if(msg != null)
-        {
-            message.channel.send("Sesja jest o: msg");
-        }
     }
     if (command === 'd') {
         let dice = args[0];

@@ -13,6 +13,7 @@ const compressing = require('compressing').zip;
 const moment = require('moment');
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
+const fs = require("fs");
 exports.discordmsgArray = [];
 exports.interval = "";
 let password = data.psswd;
@@ -62,6 +63,17 @@ client.on("message", (message) => {
     if (command === 'id') {
         message.channel.send(message.author.id);
         return;
+    }
+    if (command === `sesja`) {
+        let msg;
+        fs.readFile("nowaSesja.txt", "utf-8", (err, data) => {
+            if (err) { message.channel.send("brak ustawionej nowej sesji.")}
+            msg = data;
+        })
+        if(msg != null)
+        {
+            message.channel.send("Sesja jest o: msg");
+        }
     }
     if (command === 'd') {
         let dice = args[0];
@@ -274,6 +286,14 @@ client.on("message", (message) => {
                 message.channel.send("Przepraszam. " + client.emojis.random());
                 exec("sudo pm2 restart mybot");
                 break;
+            }
+            
+            case 'nowasesja': {
+                let data = args.join(" ")
+                fs.writeFile("nowaSesja.txt", data, (err) => {
+                    if (err) console.log(err);
+                    message.channel.send(`@everyone Data nowej sesji: ${data}`);
+                  });
             }
 
             case 'backup-data': {

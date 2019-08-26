@@ -71,7 +71,7 @@ client.on("message", (message) => {
             msg = data;
             if(msg != null)
             {
-                message.channel.send(`Sesja jest o: ${msg}`);
+                message.channel.send(`Następna sesja: ${msg}`);
             }
         })
     }

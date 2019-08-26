@@ -57,7 +57,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n");
+        message.channel.send("Available Commands:\n!sesja - info kiedy nastepna sesja D&D\n!nowasesja - ustaw datę nowej sesji D&D (podaj po komendzie).\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n");
         return;
     }
     if (command === 'id') {

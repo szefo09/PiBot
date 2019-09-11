@@ -74,6 +74,7 @@ client.on("message", (message) => {
                 message.channel.send(`Następna sesja: ${msg}`);
             }
         })
+        return;
     }
     if (command === 'd') {
         let dice = args[0];
@@ -294,6 +295,7 @@ client.on("message", (message) => {
                     if (err) console.log(err);
                     message.channel.send(`@everyone Data nowej sesji: ${data}`);
                   });
+                  break;
             }
 
             case 'backup-data': {

@@ -67,10 +67,11 @@ client.on("message", (message) => {
     if (command === `sesja`) {
         let msg;
         fs.readFile("nowaSesja.txt", "utf-8", (err, data) => {
-            if (err) { message.channel.send("brak ustawionej nowej sesji.")}
+            if (err) {
+                message.channel.send("brak ustawionej nowej sesji.")
+            }
             msg = data;
-            if(msg != null)
-            {
+            if (msg != null) {
                 message.channel.send(`Następna sesja: ${msg}`);
             }
         })
@@ -288,14 +289,14 @@ client.on("message", (message) => {
                 exec("sudo pm2 restart mybot");
                 break;
             }
-            
+
             case 'nowasesja': {
                 let data = args.join(" ")
                 fs.writeFile("nowaSesja.txt", data, (err) => {
                     if (err) console.log(err);
                     message.channel.send(`@everyone Data nowej sesji: ${data}`);
-                  });
-                  break;
+                });
+                break;
             }
 
             case 'backup-data': {
@@ -304,17 +305,18 @@ client.on("message", (message) => {
                     cwd: "/home/pi/server/ygopro-server/config",
                     env: process.env
                 }
-                var optionsDrive = {
+                var optionsMain = {
                     cwd: "/media/pi/usb",
                     env: process.env
                 }
-                exec(`zip -qr /home/ftpuser/backup/replays/replays_${date}.zip current_replays`, optionsDrive).on('exit', () => {
-                    exec(`zip -qr /media/pi/usb/replays/replays_${date}.zip current_replays`, optionsDrive).on('exit', () => {
-                        exec("rm -rf current_replays/*", optionsDrive)
+
+                exec(`zip -qr /home/ftpuser/backup/replays/replays_${date}.zip current_replays`, optionsMain).on('exit', () => {
+                    exec(`zip -qr /media/pi/usb/replays/replays_${date}.zip current_replays`, optionsMain).on('exit', () => {
+                        exec(`cd current_replays && find -maxdepth 1 -name "*.yrp" -delete`, optionsMain)
                         console.log(`backup replays${date}`);
-                        exec(`zip -qr /home/ftpuser/backup/decks_saves/decks_save_${date}.zip decks_save`, optionsDrive).on("exit", () => {
-                            exec(`zip -qr /media/pi/usb/deckssaves/decks_save_${date}.zip decks_save`, optionsDrive).on('exit', () => {
-                                exec("rm -rf decks_save/*", optionsDrive);
+                        exec(`zip -qr /home/ftpuser/backup/decks_saves/decks_save_${date}.zip decks_save`, optionsMain).on("exit", () => {
+                            exec(`zip -qr /media/pi/usb/deckssaves/decks_save_${date}.zip decks_save`, optionsMain).on('exit', () => {
+                                exec(`cd decks_save && find -maxdepth 1 -name "*.ydk" -delete`, optionsMain);
                                 console.log(`backup decks_save${date}`);
                                 exec(`zip -qr /home/ftpuser/backup/duel_logs/duel_log${date}.zip duel_log.json`, optionsConfig).on('exit', () => {
                                     exec(`cp duel_log.json /media/pi/usb/duel_logs/duel_log${date}.json`, optionsConfig).on('exit', () => {
@@ -324,11 +326,11 @@ client.on("message", (message) => {
                                             message.channel.send("Backup successful!")
                                             exec("sudo pm2 restart all");
                                         });
-    
+
                                     });
                                 });
                             });
-    
+
                         });
                     });
                 });
@@ -378,13 +380,13 @@ async function DeleteMessages(message, args) {
         }
         let fetched;
         if (args[0] == -1) {
-            
+
             do {
                 fetched = await message.channel.fetchMessages({
                     limit: 100
                 });
                 fetched.forEach(async element => {
-                   await element.delete();
+                    await element.delete();
                 });
             }
             while (fetched.size >= 2);
@@ -398,7 +400,7 @@ async function DeleteMessages(message, args) {
         message.channel.bulkDelete(fetched).catch(async error => {
             message.channel.send("Error: " + error + "\nTrying manual deletion.")
             fetched.forEach(async element => {
-               await element.delete();
+                await element.delete();
             });
         });
     } catch {

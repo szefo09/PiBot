@@ -7,6 +7,8 @@ const {
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const commands = require("./commands/commands.js");
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+client.commands = new Discord.Collection();
 const data = require("./data.js");
 const getJSON = require('get-json');
 const compressing = require('compressing').zip;
@@ -18,6 +20,10 @@ exports.discordmsgArray = [];
 exports.interval = "";
 let password = data.psswd;
 const prefix = data.token;
+for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.name, command);
+}
 client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
@@ -54,155 +60,171 @@ client.on("message", (message) => {
         admin = false;
     }
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
     //non-admin commands
-    if (command === 'help') {
+    if(!admin && message.channel.type !== 'text'){
+        return message.reply('nie odpowiadam w prywatnych wiadomościach byle komu! Napisz na serwerze Discord, na którym jestem!');
+    }
+    if (commandName === 'help') {
+        
         message.channel.send("Available Commands:\n!sesja - info kiedy nastepna sesja D&D\n!nowasesja - ustaw datę nowej sesji D&D (podaj po komendzie).\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n");
         return;
     }
-    if (command === 'id') {
-        message.channel.send(message.author.id);
-        return;
-    }
-    if (command === `sesja`) {
-        let msg;
-        fs.readFile("nowaSesja.txt", "utf-8", (err, data) => {
-            if (err) {
-                message.channel.send("brak ustawionej nowej sesji.")
-            }
-            msg = data;
-            if (msg != null) {
-                message.channel.send(`Następna sesja: ${msg}`);
-            }
-        })
-        return;
-    }
-    if (command === 'd') {
-        let dice = args[0];
-        let amount = args[1];
-        if (isNaN(dice)) {
-            return;
+    if (client.commands.has(commandName)) {
+        let command = client.commands.get(commandName);
+        if (command.args && !args.length){
+           return message.channel.send("Nie podano argumentów do funkcji, która wymaga argumentów!")
         }
-        if (dice <= 0) {
-            return;
+        try {
+            command.execute(message, args);
+        } catch (error) {
+            console.error(error);
+            message.reply('Błąd przy próbie wykonania komendy!');
         }
-        if (isNaN(amount)) {
-            let result = Math.floor(Math.random() * dice) + 1;
-            if (isNaN(result)) {
-                return;
-            }
-            message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: ${result} 🎲`);
-        } else {
-            if (amount <= 0) {
-                return;
-            }
-            let result = [];
-            for (let i = 0; i < amount; i++) {
-                result.push(Math.floor(Math.random() * dice) + 1);
-                if (isNaN(result[i])) {
-                    return;
-                }
-            }
-            message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
-        }
-        return;
     }
+    // if (command === 'id') {
+    //     message.channel.send(message.author.id);
+    //     return;
+    // }
+    // if (command === `sesja`) {
+    //     let msg;
+    //     fs.readFile("nowaSesja.txt", "utf-8", (err, data) => {
+    //         if (err) {
+    //             message.channel.send("brak ustawionej nowej sesji.")
+    //         }
+    //         msg = data;
+    //         if (msg != null) {
+    //             message.channel.send(`Następna sesja: ${msg}`);
+    //         }
+    //     })
+    //     return;
+    // }
+    // if (command === 'd') {
+    //     let dice = args[0];
+    //     let amount = args[1];
+    //     if (isNaN(dice)) {
+    //         return;
+    //     }
+    //     if (dice <= 0) {
+    //         return;
+    //     }
+    //     if (isNaN(amount)) {
+    //         let result = Math.floor(Math.random() * dice) + 1;
+    //         if (isNaN(result)) {
+    //             return;
+    //         }
+    //         message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: ${result} 🎲`);
+    //     } else {
+    //         if (amount <= 0) {
+    //             return;
+    //         }
+    //         let result = [];
+    //         for (let i = 0; i < amount; i++) {
+    //             result.push(Math.floor(Math.random() * dice) + 1);
+    //             if (isNaN(result[i])) {
+    //                 return;
+    //             }
+    //         }
+    //         message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
+    //     }
+    //     return;
+    // }
 
-    if (command === 'ft') {
-        let feet = args[0];
-        let inch = args[1];
+    // if (command === 'ft') {
+    //     let feet = args[0];
+    //     let inch = args[1];
 
-        if (isNaN(feet)) {
-            return;
-        }
+    //     if (isNaN(feet)) {
+    //         return;
+    //     }
 
-        if (isNaN(inch)) {
-            let meters = roundToTwo(feet * 0.3048);
-            message.channel.send(`${feet}ft equals ${meters}m ♿`);
-        } else {
-            let meters = roundToTwo(feet * 0.3048);
-            let centimeters = roundToTwo((inch * 2.54) / 100);
-            let result = roundToTwo(meters + centimeters);
-            message.channel.send(`${feet}ft ${inch}in equals ${result}m ♿`);
-        }
+    //     if (isNaN(inch)) {
+    //         let meters = roundToTwo(feet * 0.3048);
+    //         message.channel.send(`${feet}ft equals ${meters}m ♿`);
+    //     } else {
+    //         let meters = roundToTwo(feet * 0.3048);
+    //         let centimeters = roundToTwo((inch * 2.54) / 100);
+    //         let result = roundToTwo(meters + centimeters);
+    //         message.channel.send(`${feet}ft ${inch}in equals ${result}m ♿`);
+    //     }
 
-        return;
-    }
+    //     return;
+    // }
 
-    if (command === 'lb') {
-        let pound = args[0];
+    // if (command === 'lb') {
+    //     let pound = args[0];
 
-        if (isNaN(pound)) {
-            return;
-        }
-        let kilograms = roundToTwo(pound * 0.45359237);
-        message.channel.send(`${pound}lb equals ${kilograms}kg ⚖️`);
-        return;
-    }
+    //     if (isNaN(pound)) {
+    //         return;
+    //     }
+    //     let kilograms = roundToTwo(pound * 0.45359237);
+    //     message.channel.send(`${pound}lb equals ${kilograms}kg ⚖️`);
+    //     return;
+    // }
 
-    if (command === 'ping') {
-        message.channel.send("pong!");
-        return;
-    }
-    if (command === 'rape') {
-        message.channel.send("N-No... Don't! Yamete Kudasai Senpai!!");
-        return;
-    }
-    if (command === "get-deckssave") {
-        compressing.compressDir('/media/pi/usb/decks_save', '/media/pi/usb/decks_save.zip')
-            .then(() => {
-                message.channel.send("Your decks_save.zip: ", {
-                    files: ["/media/pi/usb/decks_save.zip"]
-                })
-            })
-            .catch();
-        // zip('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip', (err) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-        //     message.channel.send("Your decks_save.zip: ", {
-        //         files: ["/media/pi/usb/decks_save.zip"]
-        //     })
-        // })
-        return;
-    }
-    if (command === "get-duellog") {
-        compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
-            .then(() => {
-                message.channel.send("Your duel-log.zip: ", {
-                    files: ["/media/pi/usb/duel_log.zip"]
-                })
-            })
-            .catch((reason) => {
-                message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
-            });
-        // zip('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip', (err) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-        //     message.channel.send("Your duel-log.zip: ", {
-        //         files: ["/media/pi/usb/duel_log.zip"]
-        //     })
-        // })
-        return;
-    }
-    if (command === "reee") {
+    // if (command === 'ping') {
+    //     message.channel.send("pong!");
+    //     return;
+    // }
+    // if (command === 'rape') {
+    //     message.channel.send("N-No... Don't! Yamete Kudasai Senpai!!");
+    //     return;
+    // }
+    // if (command === "get-deckssave") {
+    //     compressing.compressDir('/media/pi/usb/decks_save', '/media/pi/usb/decks_save.zip')
+    //         .then(() => {
+    //             message.channel.send("Your decks_save.zip: ", {
+    //                 files: ["/media/pi/usb/decks_save.zip"]
+    //             })
+    //         })
+    //         .catch();
+    //     // zip('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip', (err) => {
+    //     //     if (err) {
+    //     //         console.log(err);
+    //     //         return;
+    //     //     }
+    //     //     message.channel.send("Your decks_save.zip: ", {
+    //     //         files: ["/media/pi/usb/decks_save.zip"]
+    //     //     })
+    //     // })
+    //     return;
+    // }
+    // if (command === "get-duellog") {
+    //     compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
+    //         .then(() => {
+    //             message.channel.send("Your duel-log.zip: ", {
+    //                 files: ["/media/pi/usb/duel_log.zip"]
+    //             })
+    //         })
+    //         .catch((reason) => {
+    //             message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
+    //         });
+    //     // zip('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip', (err) => {
+    //     //     if (err) {
+    //     //         console.log(err);
+    //     //         return;
+    //     //     }
+    //     //     message.channel.send("Your duel-log.zip: ", {
+    //     //         files: ["/media/pi/usb/duel_log.zip"]
+    //     //     })
+    //     // })
+    //     return;
+    // }
+    // if (command === "reee") {
 
-        message.channel.send("Relax " + client.emojis.random(2).toString());
-        return;
-    }
-    if (command === "get-temp") {
-        GetTemperatureOfThePi().then((temp) => {
-            message.channel.send(temp);
-            return;
-        });
-    }
+    //     message.channel.send("Relax " + client.emojis.random(2).toString());
+    //     return;
+    // }
+    // if (command === "get-temp") {
+    //     GetTemperatureOfThePi().then((temp) => {
+    //         message.channel.send(temp);
+    //         return;
+    //     });
+    // }
 
     if (admin) {
         //admin commands
-        switch (command) {
+        switch (commandName) {
             case 'teamviewer': {
                 exec('sudo teamviewer --daemon enable');
                 return;

@@ -318,6 +318,7 @@ client.on("message", (message) => {
                             exec(`zip -qr /media/pi/usb/deckssaves/decks_save_${date}.zip decks_save`, optionsMain).on('exit', () => {
                                 exec(`cd decks_save && find -maxdepth 1 -name "*.ydk" -delete`, optionsMain);
                                 console.log(`backup decks_save${date}`);
+                                exec("sudo pm2 stop ygopro-server");
                                 exec(`zip -qr /home/ftpuser/backup/duel_logs/duel_log${date}.zip duel_log.json`, optionsConfig).on('exit', () => {
                                     exec(`cp duel_log.json /media/pi/usb/duel_logs/duel_log${date}.json`, optionsConfig).on('exit', () => {
                                         exec("rm -rf duel_log.json", optionsConfig).on('exit', () => {

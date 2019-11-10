@@ -438,7 +438,7 @@ function Download(message, args) {
     }
     if (typeof dlLink !== 'undefined') {
         if (typeof name !== 'undefined') {
-            let command = `wget -q -c -O /media/pi/usb/filmy/${path}${name} '${dlLink}'`
+            let command = `wget --no-check-certificate -q -c -O /media/pi/usb/filmy/${path}${name} '${dlLink}'`
             message.channel.send(`Started downloading ${name}`);
             console.log(command)
             let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
@@ -454,7 +454,7 @@ function Download(message, args) {
                 }
             });
         } else {
-            let command = `wget -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
+            let command = `wget --no-check-certificate -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
             console.log(command);
             let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
             message.channel.send(`Started downloading ${dlLink}`);

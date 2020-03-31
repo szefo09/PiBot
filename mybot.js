@@ -106,7 +106,7 @@ client.on("message", (message) => {
                 if((Math.floor(Math.random() * dice) + 1)%2==0){
                     result.push(dice);
                 }else{
-                    result.push(0);
+                    result.push(1);
                 }
                 if (isNaN(result[i])) {
                     return;

@@ -14,6 +14,8 @@ const moment = require('moment');
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
 const fs = require("fs");
+const url = `https://ivall.pl/zart`;
+const https = require('https');
 exports.discordmsgArray = [];
 exports.interval = "";
 let password = data.psswd;
@@ -72,7 +74,10 @@ client.on("message", (message) => {
             }
             msg = data;
             if (msg != null) {
-                message.channel.send(`Następna sesja: ${msg}`);
+                getJoke((data)=>{
+                    message.channel.send(`${data.url}\t\n\nNastępna sesja: ${msg}`);
+                })
+                
             }
         })
         return;
@@ -486,6 +491,29 @@ function Download(message, args) {
 
 function roundToTwo(num) {
     return +(Math.round(num + "e+2") + "e-2");
+}
+function getJoke(cb) {
+    https.get(url, (resp) => {
+        let data = '';
+        // A chunk of data has been recieved.
+        resp.on('data', (chunk) => {
+            data += chunk;
+        });
+        // The whole response has been received. Print out the result.
+        resp.on('end', () => {
+            if (typeof (cb) === 'function') {
+                cb(JSON.parse(data));
+
+            }
+            return;
+        });
+    }).on("error", (err) => {
+        console.log("Error: " + err.message);
+        if (typeof (cb) === 'function') {
+            cb([]);
+        }
+        return;
+    });
 }
 
 function RestartServer(message, args) {

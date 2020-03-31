@@ -94,7 +94,7 @@ client.on("message", (message) => {
             if(result%2==0){
                 message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: 1 🎲`);
             }else{
-                message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: dice 🎲`);
+                message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: ${dice} 🎲`);
             }
             
         } else {

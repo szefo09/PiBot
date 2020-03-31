@@ -91,14 +91,23 @@ client.on("message", (message) => {
             if (isNaN(result)) {
                 return;
             }
-            message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: ${result} 🎲`);
+            if(result%2==0){
+                message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: 1 🎲`);
+            }else{
+                message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: dice 🎲`);
+            }
+            
         } else {
             if (amount <= 0) {
                 return;
             }
             let result = [];
             for (let i = 0; i < amount; i++) {
-                result.push(Math.floor(Math.random() * dice) + 1);
+                if((Math.floor(Math.random() * dice) + 1)%2==0){
+                    result.push(dice);
+                }else{
+                    result.push(0);
+                }
                 if (isNaN(result[i])) {
                     return;
                 }

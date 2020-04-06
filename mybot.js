@@ -29,10 +29,17 @@ client.on("ready", () => {
 
 function updatePlayerCount() {
     RoomCount().then(function (result) {
-        client.user.setActivity(`YGOPro2 - ${result} rooms`, {
-            url: "http://srvpro.ygo233.com/dashboard-en.html",
-            type: "WATCHING"
-        });
+        if (result == undefined) {
+            client.user.setActivity(`YGOPro2 - Server OFFLINE`, {
+                url: "http://srvpro.ygo233.com/dashboard-en.html",
+                type: "WATCHING"
+            });
+        } else {
+            client.user.setActivity(`YGOPro2 - ${result} rooms`, {
+                url: "http://srvpro.ygo233.com/dashboard-en.html",
+                type: "WATCHING"
+            });
+        }
     })
     setTimeout(updatePlayerCount, 30000);
 }
@@ -74,10 +81,10 @@ client.on("message", (message) => {
             }
             msg = data;
             if (msg != null) {
-                getJoke((data)=>{
+                getJoke((data) => {
                     message.channel.send(`${data.url}\t\n\nNastępna sesja: ${msg}`);
                 })
-                
+
             }
         })
         return;
@@ -96,21 +103,21 @@ client.on("message", (message) => {
             if (isNaN(result)) {
                 return;
             }
-            if(result%2==0){
+            if (result % 2 == 0) {
                 message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: 1 🎲`);
-            }else{
+            } else {
                 message.channel.send(`🎲 Result of ${message.author.username}'s D${dice}: ${dice} 🎲`);
             }
-            
+
         } else {
             if (amount <= 0) {
                 return;
             }
             let result = [];
             for (let i = 0; i < amount; i++) {
-                if((Math.floor(Math.random() * dice) + 1)%2==0){
+                if ((Math.floor(Math.random() * dice) + 1) % 2 == 0) {
                     result.push(dice);
-                }else{
+                } else {
                     result.push(1);
                 }
                 if (isNaN(result[i])) {
@@ -492,6 +499,7 @@ function Download(message, args) {
 function roundToTwo(num) {
     return +(Math.round(num + "e+2") + "e-2");
 }
+
 function getJoke(cb) {
     https.get(url, (resp) => {
         let data = '';

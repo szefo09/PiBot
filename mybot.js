@@ -27,10 +27,17 @@ client.on("ready", () => {
 
 function updatePlayerCount() {
     RoomCount().then(function (result) {
-        client.user.setActivity(`YGOPro2 - ${result} rooms`, {
-            url: "http://srvpro.ygo233.com/dashboard-en.html",
-            type: "WATCHING"
-        });
+        if (typeof(result) == "undefined") {
+            client.user.setActivity(`YGOPro2 - Server OFFLINE`, {
+                url: "http://srvpro.ygo233.com/dashboard-en.html",
+                type: "WATCHING"
+            });
+        } else {
+            client.user.setActivity(`YGOPro2 - ${result} rooms`, {
+                url: "http://srvpro.ygo233.com/dashboard-en.html",
+                type: "WATCHING"
+            });
+        }
     })
     setTimeout(updatePlayerCount, 30000);
 }

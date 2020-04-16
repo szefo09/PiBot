@@ -11,6 +11,7 @@ const data = require("./data.js");
 const getJSON = require('get-json');
 const compressing = require('compressing').zip;
 const moment = require('moment');
+const wiggleEmbed = new Discord.MessageEmbed().setTitle("Wiggle!").setThumbnail("https://cdn.discordapp.com/emojis/447649395735789568.gif");
 let exec = require('child_process').exec;
 let spawn = require('child_process').spawn;
 const fs = require("fs");
@@ -530,6 +531,5 @@ function RestartServer(message, args) {
 client.login(password);
 
 function ShowEmbed(message){
-    let embed = new Discord.MessageEmbed().setTitle("Wiggle!").setThumbnail("https://cdn.discordapp.com/emojis/447649395735789568.gif");
-    message.channel.send(embed);
+    message.channel.send(wiggleEmbed);
 }

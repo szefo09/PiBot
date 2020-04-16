@@ -530,6 +530,6 @@ function RestartServer(message, args) {
 client.login(password);
 
 function ShowEmbed(message){
-    let wiggleEmbed = new Discord.MessageEmbed().setTitle("Wiggle!").setThumbnail("https://cdn.discordapp.com/emojis/447649395735789568.gif");
+    let wiggleEmbed = new client.MessageEmbed().setTitle("Wiggle!").setThumbnail("https://cdn.discordapp.com/emojis/447649395735789568.gif");
     message.channel.send(wiggleEmbed);
 }

@@ -115,7 +115,7 @@ client.on("message", (message) => {
                     return;
                 }
             }
-            message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
+            message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} (${result.reduce((a,b)=> a+b)})🎲`);
         }
         return;
     }

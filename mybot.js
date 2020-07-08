@@ -59,7 +59,7 @@ client.on("message", (message) => {
         message.channel.send(message.author.id);
         return;
     }
-    if (command === 'wiggle'){
+    if (command === 'wiggle') {
         ShowEmbed(message);
         return;
     }
@@ -436,7 +436,23 @@ function Download(message, args) {
         name = args[1];
     }
     if (typeof dlLink !== 'undefined') {
-        if (typeof path !== 'undefined') {
+        if (typeof name == 'undefined') {
+            let command = `wget --no-check-certificate -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
+            console.log(command);
+            let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
+            message.channel.send(`Started downloading ${dlLink}`);
+            download.on('error', (error) => {
+                message.channel.send(`Error downloading from ${dlLink}.\n${error}`);
+                return;
+            });
+            download.on('close', function (code, signal) {
+                if (code === 0) {
+                    message.channel.send(`Download from link ${dlLink} Completed.`);
+                } else {
+                    message.channel.send(`Download from link ${dlLink} was interrupted.`);
+                }
+            });
+        } else if (typeof path !== 'undefined') {
             let command = `wget --no-check-certificate -q -c -O /media/pi/usb/filmy/${path}${name} '${dlLink}'`
             message.channel.send(`Started downloading ${name}`);
             console.log(command)
@@ -517,7 +533,7 @@ function RestartServer(message, args) {
 }
 client.login(password);
 
-function ShowEmbed(message){
+function ShowEmbed(message) {
     let wiggleEmbed = Embed.setTitle("Wiggle!").setImage('https://cdn.discordapp.com/emojis/447649395735789568.gif');
     message.channel.send(wiggleEmbed);
 }

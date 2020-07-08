@@ -467,7 +467,7 @@ function Download(message, args) {
                 }
             });
         } else {
-            let command = `wget --no-check-certificate -q -c -P /media/pi/usb/filmy/${name} '${dlLink}'`
+            let command = `wget --no-check-certificate -q -c -O /media/pi/usb/filmy/${name} '${dlLink}'`
             console.log(command);
             let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
             message.channel.send(`Started downloading ${name}`);

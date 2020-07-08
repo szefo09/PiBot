@@ -13,6 +13,7 @@ const compressing = require('compressing').zip;
 const moment = require('moment');
 let Embed = new Discord.RichEmbed();
 let exec = require('child_process').exec;
+let execSync = require('child_process').execSync;
 let spawn = require('child_process').spawn;
 const fs = require("fs");
 exports.discordmsgArray = [];
@@ -443,13 +444,13 @@ function Download(message, args) {
             return;
         }
         let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
-        exec(mkdircmd);
+        execSync(mkdircmd);
         path += "/";
     } else {
         name = args[1];
     }
     if (typeof dlLink !== 'undefined') {
-        if (typeof name !== 'undefined') {
+        if (typeof path !== 'undefined') {
             let command = `wget --no-check-certificate -q -c -O /media/pi/usb/filmy/${path}${name} '${dlLink}'`
             message.channel.send(`Started downloading ${name}`);
             console.log(command)
@@ -462,23 +463,23 @@ function Download(message, args) {
                 if (code === 0) {
                     message.channel.send(`Download ${name} from link ${dlLink} Completed.`);
                 } else {
-                    message.channel.send(`Download ${name} from link ${dlLink} was interrupted.`);
+                    message.channel.send(`Download ${name} from link ${dlLink} was interrupted. Code: ${code}`);
                 }
             });
         } else {
-            let command = `wget --no-check-certificate -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
+            let command = `wget --no-check-certificate -q -c -P /media/pi/usb/filmy/${name} '${dlLink}'`
             console.log(command);
             let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
-            message.channel.send(`Started downloading ${dlLink}`);
+            message.channel.send(`Started downloading ${name}`);
             download.on('error', (error) => {
-                message.channel.send(`Error downloading from ${dlLink}.\n${error}`);
+                message.channel.send(`Error downloading ${name} from ${dlLink}.\n${error}`);
                 return;
             });
             download.on('close', function (code, signal) {
                 if (code === 0) {
-                    message.channel.send(`Download from link ${dlLink} Completed.`);
+                    message.channel.send(`Download ${name} from link ${dlLink} Completed.`);
                 } else {
-                    message.channel.send(`Download from link ${dlLink} was interrupted.`);
+                    message.channel.send(`Download ${name} from link ${dlLink} was interrupted.`);
                 }
             });
         }

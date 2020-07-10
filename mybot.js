@@ -429,8 +429,10 @@ function Download(message, args) {
         if (path.includes("..")) {
             return;
         }
-        let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
-        execSync(mkdircmd);
+        if(!fs.existsSync(`/media/pi/usb/filmy/${path}`)){
+            let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
+            execSync(mkdircmd);
+        }
         path += "/";
     } else {
         name = args[1];

@@ -293,7 +293,7 @@ client.on("message", (message) => {
                 let data = args.join(" ")
                 fs.writeFile("nowaSesja.txt", data, (err) => {
                     if (err) console.log(err);
-                    message.channel.send(`@D&D Data nowej sesji: ${data}`);
+                    message.channel.send(`<@&729696773509087306> Data nowej sesji: ${data}`);
                 });
                 break;
             }

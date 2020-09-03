@@ -343,6 +343,9 @@ client.on("message", (message) => {
     }
     return;
 });
+client.on("error", (err) => {
+    process.exit(0)
+    });
 /**
  * @returns string
  */
@@ -533,9 +536,10 @@ function RestartServer(message, args) {
 
 
 }
-client.login(password);
 
 function ShowEmbed(message) {
     let wiggleEmbed = Embed.setTitle("Wiggle!").setImage('https://cdn.discordapp.com/emojis/447649395735789568.gif');
     message.channel.send(wiggleEmbed);
 }
+
+client.login(password);

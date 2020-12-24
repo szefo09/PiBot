@@ -11,7 +11,9 @@ const data = require("./data.js");
 const getJSON = require('get-json');
 const compressing = require('compressing').zip;
 const moment = require('moment');
+let Embed = new Discord.RichEmbed();
 let exec = require('child_process').exec;
+let execSync = require('child_process').execSync;
 let spawn = require('child_process').spawn;
 const fs = require("fs");
 exports.discordmsgArray = [];
@@ -21,19 +23,12 @@ const prefix = data.token;
 client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
-    updatePlayerCount();
-    setTimeout(updatePlayerCount, 30000);
+    client.user.setActivity(`sesje DnD~`, {
+        url: "http://srvpro.ygo233.com/dashboard-en.html",
+        type: "WATCHING"
+    });
 });
 
-function updatePlayerCount() {
-    RoomCount().then(function (result) {
-        client.user.setActivity(`YGOPro2 - ${result} rooms`, {
-            url: "http://srvpro.ygo233.com/dashboard-en.html",
-            type: "WATCHING"
-        });
-    })
-    setTimeout(updatePlayerCount, 30000);
-}
 client.on("message", (message) => {
     let admin = false;
     // if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
@@ -57,11 +52,15 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!sesja - info kiedy nastepna sesja D&D\n!nowasesja - ustaw datę nowej sesji D&D (podaj po komendzie).\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n");
+        message.channel.send("Available Commands:\n!sesja - info kiedy nastepna sesja D&D\n!nowasesja - ustaw datę nowej sesji D&D (podaj po komendzie).\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n!wiggle\n");
         return;
     }
     if (command === 'id') {
         message.channel.send(message.author.id);
+        return;
+    }
+    if (command === 'wiggle') {
+        ShowEmbed(message);
         return;
     }
     if (command === `sesja`) {
@@ -103,7 +102,7 @@ client.on("message", (message) => {
                     return;
                 }
             }
-            message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} 🎲`);
+            message.channel.send(`🎲 Result of ${message.author.username}'s ${amount} D${dice}s: ${result.join(", ")} (Sum: ${result.reduce((a,b)=> a+b)})🎲`);
         }
         return;
     }
@@ -295,7 +294,7 @@ client.on("message", (message) => {
                 let data = args.join(" ")
                 fs.writeFile("nowaSesja.txt", data, (err) => {
                     if (err) console.log(err);
-                    message.channel.send(`@everyone Data nowej sesji: ${data}`);
+                    message.channel.send(`<@&729696773509087306> Data nowej sesji: ${data}`);
                 });
                 break;
             }
@@ -310,7 +309,7 @@ client.on("message", (message) => {
                     cwd: "/media/pi/usb",
                     env: process.env
                 }
-
+                exec("sudo pm2 stop ygopro-server");
                 exec(`zip -qr /home/ftpuser/backup/replays/replays_${date}.zip current_replays`, optionsMain).on('exit', () => {
                     exec(`zip -qr /media/pi/usb/replays/replays_${date}.zip current_replays`, optionsMain).on('exit', () => {
                         exec(`cd current_replays && find -maxdepth 1 -name "*.yrp" -delete`, optionsMain)
@@ -345,6 +344,9 @@ client.on("message", (message) => {
     }
     return;
 });
+client.on("error", (err) => {
+    process.exit(0)
+    });
 /**
  * @returns string
  */
@@ -431,31 +433,17 @@ function Download(message, args) {
         if (path.includes("..")) {
             return;
         }
-        let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
-        exec(mkdircmd);
+        if(!fs.existsSync(`/media/pi/usb/filmy/${path}`)){
+            let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
+            execSync(mkdircmd);
+        }
         path += "/";
     } else {
         name = args[1];
     }
     if (typeof dlLink !== 'undefined') {
-        if (typeof name !== 'undefined') {
-            let command = `wget -q -c -O /media/pi/usb/filmy/${path}${name} '${dlLink}'`
-            message.channel.send(`Started downloading ${name}`);
-            console.log(command)
-            let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
-            download.on('error', (error) => {
-                message.channel.send(`Error downloading ${name} from ${dlLink}.\n${error}`);
-                return;
-            });
-            download.on('close', function (code, signal) {
-                if (code === 0) {
-                    message.channel.send(`Download ${name} from link ${dlLink} Completed.`);
-                } else {
-                    message.channel.send(`Download ${name} from link ${dlLink} was interrupted.`);
-                }
-            });
-        } else {
-            let command = `wget -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
+        if (typeof name == 'undefined') {
+            let command = `wget --no-check-certificate -q -c -P /media/pi/usb/filmy/ '${dlLink}'`
             console.log(command);
             let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
             message.channel.send(`Started downloading ${dlLink}`);
@@ -468,6 +456,38 @@ function Download(message, args) {
                     message.channel.send(`Download from link ${dlLink} Completed.`);
                 } else {
                     message.channel.send(`Download from link ${dlLink} was interrupted.`);
+                }
+            });
+        } else if (typeof path !== 'undefined') {
+            let command = `wget --no-check-certificate -q -c -O /media/pi/usb/filmy/${path}${name} '${dlLink}'`
+            message.channel.send(`Started downloading ${name}`);
+            console.log(command)
+            let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
+            download.on('error', (error) => {
+                message.channel.send(`Error downloading ${name} from ${dlLink}.\n${error}`);
+                return;
+            });
+            download.on('close', function (code, signal) {
+                if (code === 0) {
+                    message.channel.send(`Download ${name} from link ${dlLink} Completed.`);
+                } else {
+                    message.channel.send(`Download ${name} from link ${dlLink} was interrupted. Code: ${code}`);
+                }
+            });
+        } else {
+            let command = `wget --no-check-certificate -q -c -O /media/pi/usb/filmy/${name} '${dlLink}'`
+            console.log(command);
+            let download = exec(command /*,{'maxBuffer':1000*1024}*/ );
+            message.channel.send(`Started downloading ${name}`);
+            download.on('error', (error) => {
+                message.channel.send(`Error downloading ${name} from ${dlLink}.\n${error}`);
+                return;
+            });
+            download.on('close', function (code, signal) {
+                if (code === 0) {
+                    message.channel.send(`Download ${name} from link ${dlLink} Completed.`);
+                } else {
+                    message.channel.send(`Download ${name} from link ${dlLink} was interrupted.`);
                 }
             });
         }
@@ -517,4 +537,10 @@ function RestartServer(message, args) {
 
 
 }
+
+function ShowEmbed(message) {
+    let wiggleEmbed = Embed.setTitle("Wiggle!").setImage('https://cdn.discordapp.com/emojis/447649395735789568.gif');
+    message.channel.send(wiggleEmbed);
+}
+
 client.login(password);

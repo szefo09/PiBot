@@ -205,6 +205,7 @@ client.on("message", (message) => {
         switch (command) {
             case 'teamviewer': {
                 exec('sudo teamviewer --daemon enable');
+                message.channel.send(`enabling Teamviewer`);
                 return;
             }
             case 'dl': {

@@ -202,9 +202,10 @@ client.on("message", (message) => {
     if (admin) {
         //admin commands
         switch (command) {
-            case 'teamviewer': {
-                exec('sudo apt-get install teamviewer -y');
-                message.channel.send(`installing Teamviewer`);
+            case 'update-pi': {
+                execSync('sudo apt-get update');
+                execSync('sudo apt-get dist-upgrade -y');
+                message.channel.send(`installing updates`);
                 return;
             }
             case 'dl': {
@@ -275,7 +276,7 @@ client.on("message", (message) => {
             }
 
             case 'dashboard': {
-                ShowDasboard(message);
+                ShowDashboard(message);
                 break;
             }
 
@@ -362,7 +363,7 @@ async function GetTemperatureOfThePi() {
 
 }
 //PM2 List of proccesses
-function ShowDasboard(message) {
+function ShowDashboard(message) {
     let dashboard = spawn('./list.sh');
     dashboard.stdout.on('data', (data) => {
         message.channel.send(`\n${data}`);

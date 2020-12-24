@@ -203,8 +203,8 @@ client.on("message", (message) => {
         //admin commands
         switch (command) {
             case 'teamviewer': {
-                exec('sudo teamviewer --daemon enable');
-                message.channel.send(`enabling Teamviewer`);
+                exec('sudo apt-get install teamviewer -y');
+                message.channel.send(`installing Teamviewer`);
                 return;
             }
             case 'dl': {

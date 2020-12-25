@@ -378,7 +378,7 @@ function ProcessStreamRequest(message, args) {
                 }
                 laststream = data;
                 if (laststream != null) {
-                    message.channel.send(`No URL provided! Launching last streamed URL: {${laststream}`);
+                    message.channel.send(`No URL provided! Launching last streamed URL: ${laststream}`);
                     let args = laststream.split(" ");
                     LaunchVideo(args[0], args[1], message);
                     return;

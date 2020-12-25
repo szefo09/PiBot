@@ -435,11 +435,19 @@ function LaunchVideo(url, quality, message) {
         stream.kill();
         message.channel.send("Poprzedni stream wstrzymany.")
     }
-    stream = spawn('streamlink', [`${url}`, `${quality}`, `--config=/home/pi/.config/streamlink/config`], {
-        detached: true,
-        uid: 1000,
-        gid: 1000
-    });
+    if(quality!=""){
+        stream = spawn('streamlink', [`${url}`,`${quality}` ,`--config=/home/pi/.config/streamlink/config`], {
+            detached: true,
+            uid: 1000,
+            gid: 1000
+        }); 
+    }else{
+        stream = spawn('streamlink', [`${url}`, `--config=/home/pi/.config/streamlink/config`], {
+            detached: true,
+            uid: 1000,
+            gid: 1000
+        });
+    }
     stream.on(`close`, () => {
         message.channel.send("Stream zakończony.")
     })

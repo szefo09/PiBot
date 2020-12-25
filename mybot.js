@@ -414,6 +414,7 @@ function ProcessStreamRequest(message, args) {
             message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
         }
         let videoURL = args[0];
+        let quality=""
         if (typeof (args[1]) !== "undefined") {
             quality = args[1];
         }
@@ -433,9 +434,6 @@ function LaunchVideo(url, quality, message) {
         stream.on(`close`,()=>console.log("old stream ended."));
         stream.kill();
         message.channel.send("Poprzedni stream wstrzymany.")
-    }
-    if(typeof quality =="undefined"){
-        quality = "";
     }
     stream = spawn('streamlink', [`${url}`, `${quality}`, `--config=/home/pi/.config/streamlink/config`], {
         detached: true,

@@ -16,6 +16,7 @@ let exec = require('child_process').exec;
 let execSync = require('child_process').execSync;
 let spawn = require('child_process').spawn;
 const fs = require("fs");
+let stream;
 exports.discordmsgArray = [];
 exports.interval = "";
 let password = data.psswd;
@@ -208,8 +209,8 @@ client.on("message", (message) => {
                 message.channel.send(`installing updates`);
                 return;
             }
-            case 'stream':{
-                ProcessStreamRequest(message,args);
+            case 'stream': {
+                ProcessStreamRequest(message, args);
                 break;
             }
             case 'dl': {
@@ -351,7 +352,7 @@ client.on("message", (message) => {
 });
 client.on("error", (err) => {
     process.exit(0)
-    });
+});
 /**
  * @returns string
  */
@@ -367,63 +368,75 @@ async function GetTemperatureOfThePi() {
 
 }
 
-function ProcessStreamRequest(message,args){
-    try{
-        if(typeof(args)=="undefined" || typeof(args[0])=="undefined"){
+function ProcessStreamRequest(message, args) {
+    try {
+        if (typeof (args) == "undefined" || typeof (args[0]) == "undefined") {
             let laststream;
             fs.readFile("lastStream.txt", "utf-8", (err, data) => {
                 if (err) {
-                  message.channel.send("No URL provided!");
+                    message.channel.send("No URL provided!");
                 }
                 laststream = data;
                 if (laststream != null) {
-                  message.channel.send(`No URL provided! Launching last streamed URL: {${laststream}`);
-                  let args = laststream.split(" ");
-                  LaunchVideo(args[0],args[1],message);
-                  return;
+                    message.channel.send(`No URL provided! Launching last streamed URL: {${laststream}`);
+                    let args = laststream.split(" ");
+                    LaunchVideo(args[0], args[1], message);
+                    return;
                 }
             })
             return;
-          }
-          if(args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)){
-              message.channel.send("valid twitch URL");
-          }
-          if(args[0].match(/https\:\/\/www\.youtube\.com\/watch\?v\=\S{1,}$/)){
-              message.channel.send("valid YT URL");
-          }
-          if(args[0].match(/\S{3,}/)){
-              const twitchURL = "https://twitch.tv/";
-              args[0] = twitchURL+args[0];
-              message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
-          }
-          let quality = "best";
-          let videoURL = args[0];
-          if(typeof(args[1])!=="undefined"){
-              quality = args[1];
-          }
-          let streamData = `${videoURL} ${quality}`;
-          fs.writeFile("lastStream.txt", streamData, (err) => {
-              if (err) console.log(err);
-          });
-          LaunchVideo(videoURL,quality,message);
-    }catch(err){
+        }
+        if (args[0] == "end") {
+            if (stream != null) {
+                stream.kill();
+                message.channel.send("Ended the stream.");
+            } else {
+                message.channel.send("No stream to end.");
+            }
+        }
+        if (args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)) {
+            message.channel.send("valid twitch URL");
+        }
+        if (args[0].match(/https\:\/\/www\.youtube\.com\/watch\?v\=\S{1,}$/)) {
+            message.channel.send("valid YT URL");
+        }
+        if (args[0].match(/\S{3,}/)) {
+            const twitchURL = "https://twitch.tv/";
+            args[0] = twitchURL + args[0];
+            message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
+        }
+        let quality = "best";
+        let videoURL = args[0];
+        if (typeof (args[1]) !== "undefined") {
+            quality = args[1];
+        }
+        let streamData = `${videoURL} ${quality}`;
+        fs.writeFile("lastStream.txt", streamData, (err) => {
+            if (err) console.log(err);
+        });
+        LaunchVideo(videoURL, quality, message);
+    } catch (err) {
         message.channel.send(err);
     }
-    
+
 }
 
-function LaunchVideo(url,quality,message){
-    let stream = spawn('streamlink',[`${url}`,`${quality}`,`--config=/home/pi/.config/streamlink/config`],{detached:true,uid:1000,gid:1000});
-    stream.on(`close`,()=>{
+function LaunchVideo(url, quality, message) {
+    stream = spawn('streamlink', [`${url}`, `${quality}`, `--config=/home/pi/.config/streamlink/config`], {
+        detached: true,
+        uid: 1000,
+        gid: 1000
+    });
+    stream.on(`close`, () => {
         message.channel.send("Stream zakończony.")
     })
     stream.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);
-      });
-      
+    });
+
     stream.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
-      });
+    });
 }
 
 //PM2 List of proccesses
@@ -498,7 +511,7 @@ function Download(message, args) {
         if (path.includes("..")) {
             return;
         }
-        if(!fs.existsSync(`/media/pi/usb/filmy/${path}`)){
+        if (!fs.existsSync(`/media/pi/usb/filmy/${path}`)) {
             let mkdircmd = `mkdir -m777 /media/pi/usb/filmy/${path}`;
             execSync(mkdircmd);
         }

@@ -216,8 +216,9 @@ client.on("message", (message) => {
             case 'endstream': {
                 if(stream){
                     stream.kill();
+                }else{
+                    message.channel.send("Nie ma obecnie strumienia.");
                 }
-                message.channel.send("Stream closed.");
                 return;
             }
             case 'dl': {

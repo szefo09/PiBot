@@ -423,7 +423,7 @@ function ProcessStreamRequest(message, args) {
         });
         LaunchVideo(videoURL, quality, message);
     } catch (err) {
-        message.channel.send(err);
+        console.log(err);
     }
 
 }

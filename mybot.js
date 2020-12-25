@@ -378,8 +378,9 @@ function ProcessStreamRequest(message,args){
                 laststream = data;
                 if (laststream != null) {
                   message.channel.send(`No URL provided! Launching last streamed URL: {${laststream}`);
-                  let streamData = laststream.split(" ");
-                  LaunchVideo[streamData[0],streamData[1]];
+                  let args = laststream.split(" ");
+                  LaunchVideo(args[0],args[1],message);
+                  return;
                 }
             })
             return;
@@ -404,19 +405,18 @@ function ProcessStreamRequest(message,args){
           fs.writeFile("lastStream.txt", streamData, (err) => {
               if (err) console.log(err);
           });
-          LaunchVideo(videoURL,quality);
+          LaunchVideo(videoURL,quality,message);
     }catch(err){
         message.channel.send(err);
     }
     
 }
 
-function LaunchVideo(url,quality){
-    try{
-    spawn('streamlink',[`${url}`,`${quality}`]);
-    }catch(err){
-        message.channel.send(err);
-    }
+function LaunchVideo(url,quality,message){
+    let stream = spawn('streamlink',[`${url}`,`${quality}`]);
+    stream.on(`close`,()=>{
+        message.channel.send("Stream zakończony.")
+    })
 }
 
 //PM2 List of proccesses

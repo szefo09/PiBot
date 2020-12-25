@@ -215,7 +215,7 @@ client.on("message", (message) => {
             }
             case 'endstream': {
                 if(stream){
-                    stream.kill();
+                    stream.kill(2);
                 }else{
                     message.channel.send("Nie ma obecnie strumienia.");
                 }
@@ -396,7 +396,7 @@ function ProcessStreamRequest(message, args) {
         }
         if (args[0] == "end") {
             if (stream != null) {
-                stream.kill();
+                stream.kill(2);
             } else {
                 message.channel.send("Nie ma obecnie strumienia.");
             }
@@ -431,8 +431,7 @@ function ProcessStreamRequest(message, args) {
 
 function LaunchVideo(url, quality, message) {
     if(stream){
-        stream.on(`close`,()=>console.log("old stream ended."));
-        stream.kill();
+        stream.kill(2);
         message.channel.send("Poprzedni stream wstrzymany.")
     }
     if(quality!=""){
@@ -448,8 +447,8 @@ function LaunchVideo(url, quality, message) {
             gid: 1000
         });
     }
-    stream.on(`close`, () => {
-        message.channel.send("Stream zakończony.")
+    stream.on(`close`, (code) => {
+        message.channel.send("Stream zakończony. "+code);
     })
     stream.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);

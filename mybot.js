@@ -204,9 +204,12 @@ client.on("message", (message) => {
         switch (command) {
             case 'update-pi': {
                 execSync('sudo apt-get update');
-                execSync('sudo apt-get dist-upgrade -y');
+                execSync('sudo apt-get upgrade -y');
                 message.channel.send(`installing updates`);
                 return;
+            }
+            case 'stream':{
+                LaunchVideo(message,args);
             }
             case 'dl': {
                 Download(message, args);
@@ -362,6 +365,21 @@ async function GetTemperatureOfThePi() {
     }
 
 }
+
+function LaunchVideo(message,args){
+    if(!args[0]){
+      message.channel.send("No URL provided!");  
+    }
+    if(args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)){
+        message.channel.send("valid twitch URL");
+    }
+    if(args[0].match(/https\:\/\/www\.youtube\.com\/watch\?v\=\S{1,}$/)){
+        message.channel.send("valid YT URL");
+    }
+
+    
+}
+
 //PM2 List of proccesses
 function ShowDashboard(message) {
     let dashboard = spawn('./list.sh');

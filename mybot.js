@@ -434,7 +434,7 @@ function LaunchVideo(url, quality, message) {
         stream.kill();
         message.channel.send("Poprzedni stream wstrzymany.")
     }
-    if(!quality){
+    if(typeof quality =="undefined"){
         quality = "";
     }
     stream = spawn('streamlink', [`${url}`, `${quality}`, `--config=/home/pi/.config/streamlink/config`], {

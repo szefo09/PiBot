@@ -210,6 +210,7 @@ client.on("message", (message) => {
             }
             case 'stream':{
                 LaunchVideo(message,args);
+                break;
             }
             case 'dl': {
                 Download(message, args);

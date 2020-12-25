@@ -414,7 +414,7 @@ function ProcessStreamRequest(message,args){
 function LaunchVideo(url,quality){
     try{
     spawn('streamlink',[`${url}`,`${quality}`]);
-    }.catch(err){
+    }catch(err){
         message.channel.send(err);
     }
 }

@@ -397,9 +397,8 @@ function ProcessStreamRequest(message, args) {
         if (args[0] == "end") {
             if (stream != null) {
                 stream.kill();
-                message.channel.send("Ended the stream.");
             } else {
-                message.channel.send("No stream to end.");
+                message.channel.send("Nie ma obecnie strumienia.");
             }
             return;
         }

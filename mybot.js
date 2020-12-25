@@ -393,6 +393,7 @@ function ProcessStreamRequest(message, args) {
             } else {
                 message.channel.send("No stream to end.");
             }
+            return;
         }
         if (args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)) {
             message.channel.send("valid twitch URL");

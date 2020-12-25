@@ -368,9 +368,9 @@ async function GetTemperatureOfThePi() {
 }
 
 function LaunchVideo(message,args){
-    message.channel.send(typeof(args))
-    if(typeof(args)=="undefined"){
+    if(typeof(args)=="undefined" || typeof(args[0])=="undefined"){
       message.channel.send("No URL provided!");  
+      return;
     }
     if(args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)){
         message.channel.send("valid twitch URL");

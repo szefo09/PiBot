@@ -417,6 +417,13 @@ function LaunchVideo(url,quality,message){
     stream.on(`close`,()=>{
         message.channel.send("Stream zakończony.")
     })
+    stream.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+      });
+      
+    stream.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
 }
 
 //PM2 List of proccesses

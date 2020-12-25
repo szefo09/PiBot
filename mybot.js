@@ -413,7 +413,7 @@ function ProcessStreamRequest(message,args){
 }
 
 function LaunchVideo(url,quality,message){
-    let stream = spawn('streamlink',[`${url}`,`${quality}`],{detached:true,uid:1000});
+    let stream = spawn('streamlink',[`${url}`,`${quality}`],{cwd="~",detached:true,uid:1000});
     stream.on(`close`,()=>{
         message.channel.send("Stream zakończony.")
     })

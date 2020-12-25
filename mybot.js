@@ -368,7 +368,7 @@ async function GetTemperatureOfThePi() {
 }
 
 function LaunchVideo(message,args){
-    if(!args[0]){
+    if(!args || !args[0]){
       message.channel.send("No URL provided!");  
     }
     if(args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)){
@@ -377,8 +377,7 @@ function LaunchVideo(message,args){
     if(args[0].match(/https\:\/\/www\.youtube\.com\/watch\?v\=\S{1,}$/)){
         message.channel.send("valid YT URL");
     }
-
-    
+    return;
 }
 
 //PM2 List of proccesses

@@ -368,6 +368,7 @@ async function GetTemperatureOfThePi() {
 }
 
 function LaunchVideo(message,args){
+    message.channel.send(args);t
     if(!args || !args[0]){
       message.channel.send("No URL provided!");  
     }

@@ -423,6 +423,9 @@ function ProcessStreamRequest(message, args) {
 }
 
 function LaunchVideo(url, quality, message) {
+    if(stream){
+        stream.kill();
+    }
     stream = spawn('streamlink', [`${url}`, `${quality}`, `--config=/home/pi/.config/streamlink/config`], {
         detached: true,
         uid: 1000,

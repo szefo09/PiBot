@@ -432,7 +432,6 @@ function ProcessStreamRequest(message, args) {
 function LaunchVideo(url, quality, message) {
     if(stream){
         stream.kill(2);
-        message.channel.send("Poprzedni stream wstrzymany.")
     }
     if(quality!=""){
         stream = spawn('streamlink', [`${url}`,`${quality}` ,`--config=/home/pi/.config/streamlink/config`], {
@@ -448,7 +447,11 @@ function LaunchVideo(url, quality, message) {
         });
     }
     stream.on(`close`, (code) => {
-        message.channel.send("Stream zakończony. "+code);
+        if(code == 130){
+            message.channel.send("Poprzedni Stream zakończony.");
+            return;
+        }
+        message.channel.send("Stream zakończony. ");
     })
     stream.stdout.on('data', (data) => {
         console.log(`stdout: ${data}`);

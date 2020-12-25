@@ -378,6 +378,11 @@ function LaunchVideo(message,args){
     if(args[0].match(/https\:\/\/www\.youtube\.com\/watch\?v\=\S{1,}$/)){
         message.channel.send("valid YT URL");
     }
+    if(args[0].match(/S{3,}/)){
+        const twitchURL = "https://twitch.tv/";
+        let possibleURL = twitchURL+args[0];
+        message.channel.send(`Possible Twitch name found, creating URL: ${possibleURL}`);
+    }
     return;
 }
 

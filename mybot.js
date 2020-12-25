@@ -213,6 +213,13 @@ client.on("message", (message) => {
                 ProcessStreamRequest(message, args);
                 break;
             }
+            case 'endstream': {
+                if(stream){
+                    stream.kill();
+                }
+                message.channel.send("Stream closed.");
+                return;
+            }
             case 'dl': {
                 Download(message, args);
                 break;

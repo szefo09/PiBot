@@ -209,7 +209,7 @@ client.on("message", (message) => {
                 return;
             }
             case 'stream':{
-                LaunchVideo(message,args);
+                ProcessStreamRequest(message,args);
                 break;
             }
             case 'dl': {
@@ -367,9 +367,20 @@ async function GetTemperatureOfThePi() {
 
 }
 
-function LaunchVideo(message,args){
+function ProcessStreamRequest(message,args){
     if(typeof(args)=="undefined" || typeof(args[0])=="undefined"){
-      message.channel.send("No URL provided!");  
+      let laststream;
+      fs.readFile("lastStream.txt", "utf-8", (err, data) => {
+          if (err) {
+            message.channel.send("No URL provided!");
+          }
+          laststream = data;
+          if (laststream != null) {
+            message.channel.send(`No URL provided! Launching last streamed URL: {${laststream}`);
+            let streamData = laststream.split(" ");
+            LaunchVideo[streamData[0],streamData[1]];
+          }
+      })
       return;
     }
     if(args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)){
@@ -380,10 +391,23 @@ function LaunchVideo(message,args){
     }
     if(args[0].match(/\S{3,}/)){
         const twitchURL = "https://twitch.tv/";
-        let possibleURL = twitchURL+args[0];
-        message.channel.send(`Possible Twitch name found, creating URL: ${possibleURL}`);
+        args[0] = twitchURL+args[0];
+        message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
     }
-    return;
+    let quality = best;
+    let videoURL = args[0];
+    if(typeof(args[1])!=="undefined"){
+        quality = args[1];
+    }
+    let streamData = `${videoURL} ${quality}`;
+    fs.writeFile("lastStream.txt", streamData, (err) => {
+        if (err) console.log(err);
+    });
+    LaunchVideo(videoURL,quality);
+}
+
+function LaunchVideo(url,quality){
+    spawn('streamlink',[`${url}`,`${quality}`]);
 }
 
 //PM2 List of proccesses

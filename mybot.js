@@ -402,10 +402,10 @@ function ProcessStreamRequest(message, args) {
             }
             return;
         }
-        if (args[0].match(/https\:\/\/twitch\.tv\/\S{1,}$/)) {
+        if (args[0].match(/https\:\/\/w{0,3}\.{0,1}twitch\.tv\/\S{1,}$/)) {
             message.channel.send("valid twitch URL");
         }
-        if (args[0].match(/https\:\/\/www\.youtube\.com\/watch\?v\=\S{1,}$/)) {
+        if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
             message.channel.send("valid YT URL");
         }
         if (args[0].match(/\S{3,}/)) {

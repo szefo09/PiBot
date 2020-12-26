@@ -404,10 +404,10 @@ function ProcessStreamRequest(message, args) {
         }
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}twitch\.tv\/\S{1,}$/)) {
             message.channel.send("valid twitch URL");
-        }
+        }else
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
             message.channel.send("valid YT URL");
-        }
+        } else
         if (args[0].match(/\S{3,}/)) {
             const twitchURL = "https://twitch.tv/";
             args[0] = twitchURL + args[0];

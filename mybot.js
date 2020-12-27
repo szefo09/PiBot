@@ -442,9 +442,11 @@ function LaunchVideo(url, quality, isLive, message) {
     if (stream) {
         stream.kill(2);
     }
-    let playerargs = ""
+    let playerargs = ``
     if (isLive) {
-        playerargs = `--player-args="--live"`;
+        playerargs += `--player-args="-o hdmi --live"`;
+    }else{
+        playerargs =`--player-args="-o hdmi"`;
     }
     if (quality != "") {
         stream = spawn('streamlink', [url, quality, `--config=/home/pi/.config/streamlink/config`, playerargs]);

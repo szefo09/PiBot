@@ -387,10 +387,15 @@ function ProcessStreamRequest(message, args) {
                 }
                 laststream = data;
                 if (laststream != null) {
-                    message.channel.send(`No URL provided! Launching last streamed URL: ${laststream}`);
-                    let args = laststream.split(" ");
-                    LaunchVideo(args[0], args[1], message);
-                    return;
+                    
+                    let dataargs = laststream.split(" ");
+                    //message.channel.send(`No URL provided! Launching last streamed URL: ${args[0]}`);
+                    if(dataargs[2]=="true"){
+                        isLive=true;
+                    }else{
+                        isLive=false;
+                    }
+                    ProcessStreamRequest(message,dataargs);
                 }
             })
             return;
@@ -422,7 +427,7 @@ function ProcessStreamRequest(message, args) {
         if (typeof (args[1]) !== "undefined") {
             quality = args[1];
         }
-        let streamData = `${videoURL} ${quality}`;
+        let streamData = `${videoURL} ${quality} ${isLive}`;
         fs.writeFile("lastStream.txt", streamData, (err) => {
             if (err) console.log(err);
         });

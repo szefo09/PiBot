@@ -447,9 +447,9 @@ function LaunchVideo(url, quality, isLive, message) {
         playerargs = `--player-args="--live"`;
     }
     if (quality != "") {
-        stream = spawn('streamlink', [url, quality, `--config=/home/pi/.config/streamlink/config`, playerargs],{uid=1000});
+        stream = spawn('streamlink', [url, quality, `--config=/home/pi/.config/streamlink/config`, playerargs],{uid:1000});
     } else {
-        stream = spawn('streamlink', [url, `--config=/home/pi/.config/streamlink/config`, playerargs],{uid=1000});
+        stream = spawn('streamlink', [url, `--config=/home/pi/.config/streamlink/config`, playerargs],{uid:1000});
     }
     stream.on(`close`, (code) => {
         if (code == 130) {

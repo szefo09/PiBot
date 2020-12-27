@@ -409,11 +409,11 @@ function ProcessStreamRequest(message, args) {
             return;
         }
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}twitch\.tv\/\S{1,}$/)) {
-            message.channel.send("valid twitch URL");
+            message.channel.send(`valid twitch URL: ${args[0]}`);
             isLive = true;
         } else
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
-            message.channel.send("valid YT URL");
+            message.channel.send(`valid YT URL: ${args[0]}`);
 
         } else
         if (args[0].match(/\S{3,}/)) {

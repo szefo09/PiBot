@@ -214,9 +214,9 @@ client.on("message", (message) => {
                 break;
             }
             case 'endstream': {
-                if(stream){
+                if (stream) {
                     stream.kill(2);
-                }else{
+                } else {
                     message.channel.send("Nie ma obecnie strumienia.");
                 }
                 return;
@@ -405,8 +405,8 @@ function ProcessStreamRequest(message, args) {
         }
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}twitch\.tv\/\S{1,}$/)) {
             message.channel.send("valid twitch URL");
-            isLive=true;
-        }else
+            isLive = true;
+        } else
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
             message.channel.send("valid YT URL");
 
@@ -415,10 +415,10 @@ function ProcessStreamRequest(message, args) {
             const twitchURL = "https://twitch.tv/";
             args[0] = twitchURL + args[0];
             message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
-            isLive=true;
+            isLive = true;
         }
         let videoURL = args[0];
-        let quality=""
+        let quality = ""
         if (typeof (args[1]) !== "undefined") {
             quality = args[1];
         }
@@ -426,28 +426,28 @@ function ProcessStreamRequest(message, args) {
         fs.writeFile("lastStream.txt", streamData, (err) => {
             if (err) console.log(err);
         });
-        LaunchVideo(videoURL, quality,isLive, message);
+        LaunchVideo(videoURL, quality, isLive, message);
     } catch (err) {
         console.log(err);
     }
 
 }
 
-function LaunchVideo(url, quality, message) {
-    if(stream){
+function LaunchVideo(url, quality, isLive, message) {
+    if (stream) {
         stream.kill(2);
     }
     let playerargs = ""
-    if(isLive){
-        playerargs=`--player-args="--live"`;
+    if (isLive) {
+        playerargs = `--player-args="--live"`;
     }
-    if(quality!=""){
-        stream = spawn('streamlink', [url,quality,`--config=/home/pi/.config/streamlink/config`],playerargs); 
-    }else{
-        stream = spawn('streamlink', [url, `--config=/home/pi/.config/streamlink/config`],playerargs);
+    if (quality != "") {
+        stream = spawn('streamlink', [url, quality, `--config=/home/pi/.config/streamlink/config`], playerargs);
+    } else {
+        stream = spawn('streamlink', [url, `--config=/home/pi/.config/streamlink/config`], playerargs);
     }
     stream.on(`close`, (code) => {
-        if(code == 130){
+        if (code == 130) {
             message.channel.send("Poprzedni Stream zakończony.");
             return;
         }

@@ -215,7 +215,7 @@ client.on("message", (message) => {
             }
             case 'endstream': {
                 if (stream) {
-                    stream.kill(2);
+                    stream.kill(15);
                 } else {
                     message.channel.send("Nie ma obecnie strumienia.");
                 }
@@ -402,7 +402,7 @@ function ProcessStreamRequest(message, args) {
         }
         if (args[0] == "end") {
             if (stream != null) {
-                stream.kill(2);
+                stream.kill(15);
             } else {
                 message.channel.send("Nie ma obecnie strumienia.");
             }
@@ -440,7 +440,7 @@ function ProcessStreamRequest(message, args) {
 
 function LaunchVideo(url, quality, isLive, message) {
     if (stream) {
-        stream.kill(2);
+        stream.kill(15);
     }
     let playerargs = ``
     if (isLive) {

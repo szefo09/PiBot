@@ -378,6 +378,7 @@ async function GetTemperatureOfThePi() {
 
 function ProcessStreamRequest(message, args) {
     try {
+        let isLive = false;
         if (typeof (args) == "undefined" || typeof (args[0]) == "undefined") {
             let laststream;
             fs.readFile("lastStream.txt", "utf-8", (err, data) => {
@@ -404,14 +405,17 @@ function ProcessStreamRequest(message, args) {
         }
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}twitch\.tv\/\S{1,}$/)) {
             message.channel.send("valid twitch URL");
+            isLive=true;
         }else
         if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
             message.channel.send("valid YT URL");
+
         } else
         if (args[0].match(/\S{3,}/)) {
             const twitchURL = "https://twitch.tv/";
             args[0] = twitchURL + args[0];
             message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
+            isLive=true;
         }
         let videoURL = args[0];
         let quality=""
@@ -422,7 +426,7 @@ function ProcessStreamRequest(message, args) {
         fs.writeFile("lastStream.txt", streamData, (err) => {
             if (err) console.log(err);
         });
-        LaunchVideo(videoURL, quality, message);
+        LaunchVideo(videoURL, quality,isLive, message);
     } catch (err) {
         console.log(err);
     }
@@ -433,18 +437,14 @@ function LaunchVideo(url, quality, message) {
     if(stream){
         stream.kill(2);
     }
+    let playerargs = ""
+    if(isLive){
+        playerargs=`--player-args="--live"`;
+    }
     if(quality!=""){
-        stream = spawn('streamlink', [`${url}`,`${quality}` ,`--config=/home/pi/.config/streamlink/config`], {
-            detached: true,
-            uid: 1000,
-            gid: 1000
-        }); 
+        stream = spawn('streamlink', [url,quality,`--config=/home/pi/.config/streamlink/config`],playerargs); 
     }else{
-        stream = spawn('streamlink', [`${url}`, `--config=/home/pi/.config/streamlink/config`], {
-            detached: true,
-            uid: 1000,
-            gid: 1000
-        });
+        stream = spawn('streamlink', [url, `--config=/home/pi/.config/streamlink/config`],playerargs);
     }
     stream.on(`close`, (code) => {
         if(code == 130){

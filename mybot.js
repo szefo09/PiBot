@@ -14,6 +14,7 @@ const moment = require('moment');
 let Embed = new Discord.RichEmbed();
 let exec = require('child_process').exec;
 let execSync = require('child_process').execSync;
+let execFile = require('child_process').execFile;
 let spawn = require('child_process').spawn;
 const fs = require("fs");
 let stream;
@@ -53,7 +54,7 @@ client.on("message", (message) => {
     const command = args.shift().toLowerCase();
     //non-admin commands
     if (command === 'help') {
-        message.channel.send("Available Commands:\n!sesja - info kiedy nastepna sesja D&D\n!nowasesja - ustaw datę nowej sesji D&D (podaj po komendzie).\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n!wiggle\n");
+        message.channel.send("Available Commands:\n!sesja - info kiedy nastepna sesja D&D\n!nowasesja - ustaw datę nowej sesji D&D (podaj po komendzie).\n!lb amount (converts pounds to kg)\n!ft feet inches (converts ft to meters or feet and inches to meters)\n!d dice amount\n!id\n!ping\n!reee\n!rape\n!get-temp\n!shout (Shouts a message to the ygopro server)\n!get-duellog\n!get-deckssave\n!dl linkToTheFile nameOfTheFile\n!restart-Server\n!clearchat <val> (max 99)\n!update-Scripts\n!update-YgoPro\n!update-Windbot\n!restart-Pi\n!update-Bot\n!dashboard\n!getcurrentrooms\n!stop - turns off !getcurrentrooms\n!badbot\n!backup-data\n!wiggle\n!stream twitch/yt url or name of the streamer\n!tv on/off\n");
         return;
     }
     if (command === 'id') {
@@ -207,19 +208,25 @@ client.on("message", (message) => {
                 execSync('sudo apt-get update');
                 execSync('sudo apt-get upgrade -y');
                 message.channel.send(`installing updates`);
-                return;
+                break;
+            }
+            case 'tv': {
+                if(args[0]=="on"){
+                    exec("echo 'on 0' | cec-client -s -d 1");
+                    return;
+                }
+                if(args[0]=="off"){
+                    exec("echo 'standby 0' | cec-client -s -d 1");
+                    return;
+                }
+                break;
             }
             case 'stream': {
                 ProcessStreamRequest(message, args);
                 break;
             }
             case 'endstream': {
-                if (stream) {
-                    stream.kill(15);
-                } else {
-                    message.channel.send("Nie ma obecnie strumienia.");
-                }
-                return;
+                return EndStream(message);
             }
             case 'dl': {
                 Download(message, args);
@@ -361,6 +368,16 @@ client.on("message", (message) => {
 client.on("error", (err) => {
     process.exit(0)
 });
+
+async function EndStream(message) {
+    if (stream) {
+        return await stream.kill(15);
+    } else {
+        return await message.channel.send("Nie ma obecnie strumienia.");
+    }
+    return;
+}
+
 /**
  * @returns string
  */
@@ -377,80 +394,79 @@ async function GetTemperatureOfThePi() {
 }
 
 function ProcessStreamRequest(message, args) {
-    try {
-        let isLive = false;
-        if (typeof (args) == "undefined" || typeof (args[0]) == "undefined") {
-            let laststream;
-            fs.readFile("lastStream.txt", "utf-8", (err, data) => {
-                if (err) {
-                    message.channel.send("No URL provided!");
-                }
-                laststream = data;
-                if (laststream != null) {
-                    
-                    let dataargs = laststream.split(" ");
-                    //message.channel.send(`No URL provided! Launching last streamed URL: ${args[0]}`);
-                    if(dataargs[2]=="true"){
-                        isLive=true;
-                    }else{
-                        isLive=false;
-                    }
-                    ProcessStreamRequest(message,dataargs);
-                }
-            })
-            return;
-        }
-        if (args[0] == "end") {
-            if (stream != null) {
-                stream.kill(15);
-            } else {
-                message.channel.send("Nie ma obecnie strumienia.");
+    let isLive = false;
+    if (typeof (args) == "undefined" || typeof (args[0]) == "undefined") {
+        let laststream;
+        fs.readFile("lastStream.txt", "utf-8", (err, data) => {
+            if (err) {
+                message.channel.send("No URL provided!");
             }
-            return;
-        }
-        if (args[0].match(/https\:\/\/w{0,3}\.{0,1}twitch\.tv\/\S{1,}$/)) {
-            message.channel.send(`valid twitch URL: ${args[0]}`);
-            isLive = true;
-        } else
-        if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
-            message.channel.send(`valid YT URL: ${args[0]}`);
+            laststream = data;
+            if (laststream != null) {
 
-        } else
-        if (args[0].match(/\S{3,}/)) {
-            const twitchURL = "https://twitch.tv/";
-            args[0] = twitchURL + args[0];
-            message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
-            isLive = true;
-        }
-        let videoURL = args[0];
-        let quality = ""
-        if (typeof (args[1]) !== "undefined") {
-            quality = args[1];
-        }
-        let streamData = `${videoURL} ${quality} ${isLive}`;
-        fs.writeFile("lastStream.txt", streamData, (err) => {
-            if (err) console.log(err);
-        });
-        LaunchVideo(videoURL, quality, isLive, message);
-    } catch (err) {
-        console.log(err);
+                let dataargs = laststream.split(" ");
+                //message.channel.send(`No URL provided! Launching last streamed URL: ${args[0]}`);
+                if (dataargs[2] == "true") {
+                    isLive = true;
+                } else {
+                    isLive = false;
+                }
+                ProcessStreamRequest(message, dataargs);
+            }
+        })
+        return;
     }
+    if (args[0] == "end") {
+        return EndStream(message);
+    }
+    if (args[0].match(/https\:\/\/w{0,3}\.{0,1}twitch\.tv\/\S{1,}$/)) {
+        message.channel.send(`valid twitch URL: ${args[0]}`);
+        isLive = true;
+    } else
+    if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
+        message.channel.send(`valid YT URL: ${args[0]}`);
+
+    } else
+    if (args[0].match(/\S{3,}/)) {
+        const twitchURL = "https://twitch.tv/";
+        args[0] = twitchURL + args[0];
+        message.channel.send(`Possible Twitch name found, creating URL: ${args[0]}`);
+        isLive = true;
+    }
+    let videoURL = args[0];
+    let quality = ""
+    if (typeof (args[1]) !== "undefined") {
+        quality = args[1];
+    }
+    let streamData = `${videoURL} ${quality} ${isLive}`;
+    fs.writeFile("lastStream.txt", streamData, (err) => {
+        if (err) console.log(err);
+    });
+    LaunchVideo(videoURL, quality, isLive, message);
 
 }
 
-function LaunchVideo(url, quality, isLive, message) {
+async function LaunchVideo(url, quality, isLive, message) {
     if (stream) {
-        stream.kill(15);
+        await EndStream(message);
     }
-    let playerargs = ``
-    if (isLive) {
-        playerargs += `--player-args="--live"`;
-    }
-    if (quality != "") {
-        stream = spawn('streamlink', [url, quality, `--config=/home/pi/.config/streamlink/config`, playerargs]);
+    if (!isLive) {
+        let yturl = await GetYTUrl(url);
+        stream = execFile(`omxplayer.bin`, [`${yturl}`, `-o`, `hdmi`]);
     } else {
-        stream = spawn('streamlink', [url, `--config=/home/pi/.config/streamlink/config`, playerargs]);
+        let streamlinkParametersArray = [url];
+        if (quality != "") {
+            streamlinkParametersArray.push(quality);
+        }
+        streamlinkParametersArray.push(`--config=/home/pi/.config/streamlink/config`);
+        stream = spawn('streamlink', streamlinkParametersArray);
     }
+    stream.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+    stream.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+    });
     stream.on(`close`, (code) => {
         if (code == 130) {
             message.channel.send("Poprzedni Stream zakończony.");
@@ -458,13 +474,14 @@ function LaunchVideo(url, quality, isLive, message) {
         }
         message.channel.send("Stream zakończony. ");
     })
-    stream.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
+}
 
-    stream.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-    });
+async function GetYTUrl(url) {
+    let ytdl = execFile(`youtube-dl`, ["-g", "-f", "best", `${url}`]);
+    for await (let data of ytdl.stdout) {
+        ytdl.kill(9);
+        return data.toString().trim();
+    }
 }
 
 //PM2 List of proccesses

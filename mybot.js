@@ -200,6 +200,10 @@ client.on("message", (message) => {
             return;
         });
     }
+    if (command === "stream") {
+        ProcessStreamRequest(message, args);
+        return;
+    }
 
     if (admin) {
         //admin commands
@@ -221,10 +225,10 @@ client.on("message", (message) => {
                 }
                 break;
             }
-            case 'stream': {
-                ProcessStreamRequest(message, args);
-                break;
-            }
+            // case 'stream': {
+            //     ProcessStreamRequest(message, args);
+            //     break;
+            // }
             case 'endstream': {
                 return EndStream(message);
             }

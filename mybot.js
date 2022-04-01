@@ -481,7 +481,7 @@ async function LaunchVideo(url, quality, isLive, message) {
 }
 
 async function GetYTUrl(url) {
-    let ytdl = execFile(`youtube-dl`, ["-g", "-f", "720p", `${url}`]);
+    let ytdl = execFile(`youtube-dl`, ["-g", "-f", "'bestvideo[height<=720]+bestaudio/best[height<=720]'", `${url}`]);
     for await (let data of ytdl.stdout) {
         ytdl.kill(9);
         return data.toString().trim();

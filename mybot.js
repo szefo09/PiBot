@@ -211,11 +211,11 @@ client.on("message", (message) => {
                 break;
             }
             case 'tv': {
-                if(args[0]=="on"){
+                if (args[0] == "on") {
                     exec("echo 'on 0' | cec-client -s -d 1");
                     return;
                 }
-                if(args[0]=="off"){
+                if (args[0] == "off") {
                     exec("echo 'standby 0' | cec-client -s -d 1");
                     return;
                 }
@@ -450,17 +450,16 @@ async function LaunchVideo(url, quality, isLive, message) {
     if (stream) {
         await EndStream(message);
     }
-    if (!isLive) {
-        let yturl = await GetYTUrl(url);
-        stream = execFile(`omxplayer.bin`, [`${yturl}`, `-o`, `hdmi`]);
-    } else {
-        let streamlinkParametersArray = [url];
-        if (quality != "") {
-            streamlinkParametersArray.push(quality);
-        }
-        streamlinkParametersArray.push(`--config=/home/pi/.config/streamlink/config`);
-        stream = spawn('streamlink', streamlinkParametersArray);
+    //if (!isLive) {
+    //let yturl = await GetYTUrl(url);
+    //stream = execFile(`omxplayer.bin`, [`${yturl}`, `-o`, `hdmi`]);
+    let streamlinkParametersArray = [url];
+    if (quality != "") {
+        streamlinkParametersArray.push(quality);
     }
+    streamlinkParametersArray.push(`--config=/home/pi/.config/streamlink/config`);
+    stream = spawn('streamlink', streamlinkParametersArray);
+
     stream.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
     });

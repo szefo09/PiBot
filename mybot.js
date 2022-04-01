@@ -423,7 +423,7 @@ function ProcessStreamRequest(message, args) {
         message.channel.send(`valid twitch URL: ${args[0]}`);
         isLive = true;
     } else
-    if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/)) {
+    if (args[0].match(/https\:\/\/w{0,3}\.{0,1}youtube\.com\/watch\?v\=\S{1,}$/) || args[0].match(/https\:\/\/w{0,3}\.{0,1}youtu.be\S{1,}$/)) {
         message.channel.send(`valid YT URL: ${args[0]}`);
 
     } else

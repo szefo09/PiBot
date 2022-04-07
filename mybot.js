@@ -26,7 +26,7 @@ client.on("ready", () => {
     console.log("I am ready!");
     client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
     client.user.setActivity(`sesje DnD~`, {
-        url: "http://srvpro.ygo233.com/dashboard-en.html",
+        //url: "http://srvpro.ygo233.com/dashboard-en.html",
         type: "WATCHING"
     });
 });
@@ -149,46 +149,46 @@ client.on("message", (message) => {
         message.channel.send("N-No... Don't! Yamete Kudasai Senpai!!");
         return;
     }
-    if (command === "get-deckssave") {
-        compressing.compressDir('/media/pi/usb/decks_save', '/media/pi/usb/decks_save.zip')
-            .then(() => {
-                message.channel.send("Your decks_save.zip: ", {
-                    files: ["/media/pi/usb/decks_save.zip"]
-                })
-            })
-            .catch();
-        // zip('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip', (err) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-        //     message.channel.send("Your decks_save.zip: ", {
-        //         files: ["/media/pi/usb/decks_save.zip"]
-        //     })
-        // })
-        return;
-    }
-    if (command === "get-duellog") {
-        compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
-            .then(() => {
-                message.channel.send("Your duel-log.zip: ", {
-                    files: ["/media/pi/usb/duel_log.zip"]
-                })
-            })
-            .catch((reason) => {
-                message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
-            });
-        // zip('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip', (err) => {
-        //     if (err) {
-        //         console.log(err);
-        //         return;
-        //     }
-        //     message.channel.send("Your duel-log.zip: ", {
-        //         files: ["/media/pi/usb/duel_log.zip"]
-        //     })
-        // })
-        return;
-    }
+    // if (command === "get-deckssave") {
+    //     compressing.compressDir('/media/pi/usb/decks_save', '/media/pi/usb/decks_save.zip')
+    //         .then(() => {
+    //             message.channel.send("Your decks_save.zip: ", {
+    //                 files: ["/media/pi/usb/decks_save.zip"]
+    //             })
+    //         })
+    //         .catch();
+    //     // zip('/home/pi/server/ygopro-server/decks_save', '/media/pi/usb/decks_save.zip', (err) => {
+    //     //     if (err) {
+    //     //         console.log(err);
+    //     //         return;
+    //     //     }
+    //     //     message.channel.send("Your decks_save.zip: ", {
+    //     //         files: ["/media/pi/usb/decks_save.zip"]
+    //     //     })
+    //     // })
+    //     return;
+    // }
+    // if (command === "get-duellog") {
+    //     compressing.compressFile('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip')
+    //         .then(() => {
+    //             message.channel.send("Your duel-log.zip: ", {
+    //                 files: ["/media/pi/usb/duel_log.zip"]
+    //             })
+    //         })
+    //         .catch((reason) => {
+    //             message.channel.send("Something went wrong preparing duel_log.zip\n" + reason)
+    //         });
+    //     // zip('/home/pi/server/ygopro-server/config/duel_log.json', '/media/pi/usb/duel_log.zip', (err) => {
+    //     //     if (err) {
+    //     //         console.log(err);
+    //     //         return;
+    //     //     }
+    //     //     message.channel.send("Your duel-log.zip: ", {
+    //     //         files: ["/media/pi/usb/duel_log.zip"]
+    //     //     })
+    //     // })
+    //     return;
+    // }
     if (command === "reee") {
 
         message.channel.send("Relax " + client.emojis.random(2).toString());
@@ -200,10 +200,10 @@ client.on("message", (message) => {
             return;
         });
     }
-    if (command === "stream") {
-        ProcessStreamRequest(message, args);
-        return;
-    }
+    //if (command === "stream") {
+        //ProcessStreamRequest(message, args);
+        //return;
+    //}
 
     if (admin) {
         //admin commands
@@ -225,10 +225,10 @@ client.on("message", (message) => {
                 }
                 break;
             }
-            // case 'stream': {
-            //     ProcessStreamRequest(message, args);
-            //     break;
-            // }
+            case 'stream': {
+                ProcessStreamRequest(message, args);
+                break;
+            }
             case 'endstream': {
                 return EndStream(message);
             }

@@ -21,6 +21,6 @@
     "compressing": "^1.5.1",
     "discord.js": "^11.6.4",
     "get-json": "^1.0.1",
-    "moment": "^2.27.0"
+    "moment": "^2.29.4"
   }
 }

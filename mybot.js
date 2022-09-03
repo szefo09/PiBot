@@ -5,13 +5,21 @@ const {
 } = require("./RoomMessageFunctions");
 'use strict';
 const Discord = require("discord.js");
-const client = new Discord.Client();
+const {Client,EmbedBuilder,GatewayIntentBits} = require("discord.js");
+const client = new Client({
+    intents: [
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMembers
+    ]
+});
 const commands = require("./commands/commands.js");
 const data = require("./data.js");
 const getJSON = require('get-json');
 const compressing = require('compressing').zip;
 const moment = require('moment');
-let Embed = new Discord.RichEmbed();
+let Embed = new EmbedBuilder();
 let exec = require('child_process').exec;
 let execSync = require('child_process').execSync;
 let execFile = require('child_process').execFile;
@@ -22,9 +30,8 @@ exports.discordmsgArray = [];
 exports.interval = "";
 let password = data.psswd;
 const prefix = data.token;
-client.on("ready", () => {
-    console.log("I am ready!");
-    client.channels.get("512392350933450767").send(client.emojis.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.random(2).toString());
+client.once("ready", () => {
+    client.channels.cache.get("512392350933450767").send(client.emojis.cache.random(2).toString() + "\nOther Bots outdated.\nPiBot activated!\n" + client.emojis.cache.random(2).toString());
     client.user.setActivity(`sesje DnD~`, {
         //url: "http://srvpro.ygo233.com/dashboard-en.html",
         type: "WATCHING"
@@ -38,7 +45,7 @@ client.on("messageCreate", (message) => {
     // }
     // if (message.content.toLowerCase().includes("http") || message.attachments.array().length > 0) {
     //     for (let z = 0; z <= Math.floor(Math.random() * 8) + 3; z++) {
-    //         message.react(client.emojis.random());
+    //         message.react(client.emojis.cache.random());
     //     }
     // }
     if (!message.content.startsWith(prefix) || message.author.bot) {
@@ -50,7 +57,7 @@ client.on("messageCreate", (message) => {
     } else {
         admin = false;
     }
-    console.log(message.content);
+    console.log(`Command: ${message.content}  User: ${message.author.username}#${message.author.discriminator}`);
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
     //non-admin commands
@@ -192,7 +199,7 @@ client.on("messageCreate", (message) => {
     // }
     if (command === "reee") {
 
-        message.channel.send("Relax " + client.emojis.random(2).toString());
+        message.channel.send("Relax " + client.emojis.cache.random(2).toString());
         return;
     }
     if (command === "get-temp") {
@@ -311,7 +318,7 @@ client.on("messageCreate", (message) => {
             }
 
             case 'badbot': {
-                message.channel.send("Przepraszam. " + client.emojis.random());
+                message.channel.send("Przepraszam. " + client.emojis.cache.random().toString());
                 exec("sudo pm2 restart mybot");
                 break;
             }
@@ -516,9 +523,10 @@ async function DeleteMessages(message, args) {
         if (args[0] == -1) {
 
             do {
-                fetched = await message.channel.fetchMessages({
+                fetched = await message.channel.messages.fetch({
                     limit: 100
                 });
+                console.log(fetched)
                 fetched.forEach(async element => {
                     await element.delete();
                 });
@@ -527,18 +535,19 @@ async function DeleteMessages(message, args) {
             return;
         }
 
-        fetched = await message.channel.fetchMessages({
-            limit: args[0]
-        });
-        console.log(fetched.size + ' messages found, deleting...');
-        message.channel.bulkDelete(fetched).catch(async error => {
+        //console.log(fetched.size + ' messages found, deleting...');
+        message.channel.bulkDelete(args[0]).catch(async error => {
+            fetched = await message.channel.messages.fetch({
+                limit: args[0]
+            });
             message.channel.send("Error: " + error + "\nTrying manual deletion.")
             fetched.forEach(async element => {
                 await element.delete();
             });
         });
-    } catch {
-        message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.random());
+    } catch (e){
+        console.log(e)
+        message.channel.send("Przykro mi, ale nie mogę tego dla Ciebie zrobić. " + client.emojis.cache.random().toString());
         return;
     }
 }
@@ -671,7 +680,7 @@ function RestartServer(message, args) {
 
 function ShowEmbed(message) {
     let wiggleEmbed = Embed.setTitle("Wiggle!").setImage('https://cdn.discordapp.com/emojis/447649395735789568.gif');
-    message.channel.send(wiggleEmbed);
+    message.channel.send({embeds: [wiggleEmbed]});
 }
 
 client.login(password);

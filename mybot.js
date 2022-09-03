@@ -31,7 +31,7 @@ client.on("ready", () => {
     });
 });
 
-client.on("interactionCreate", (message) => {
+client.on("messageCreate", (message) => {
     let admin = false;
     // if (message.content.toLowerCase().includes("u stupid") || message.content.toLowerCase().includes("baka")) {
     //     message.channel.send("<@" + message.author.id + ">" + " No U!");

@@ -50,6 +50,7 @@ client.on("message", (message) => {
     } else {
         admin = false;
     }
+    console.log(message.content);
     let args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
     //non-admin commands

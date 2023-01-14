@@ -201,8 +201,8 @@ client.on("message", (message) => {
         });
     }
     //if (command === "stream") {
-        //ProcessStreamRequest(message, args);
-        //return;
+    //ProcessStreamRequest(message, args);
+    //return;
     //}
 
     if (admin) {
@@ -457,7 +457,7 @@ async function LaunchVideo(url, quality, isLive, message) {
     if (!isLive) {
         let yturl = await GetYTUrl(url);
         console.log(yturl);
-        stream = execFile(`omxplayer.bin`, [`${yturl}`, `-o`, `hdmi`, `--timeout`,`300`, `--threshold`,`5`, '--video_queue','100','--audio_queue','30','--audio_fifo','20','--video_fifo','40']);
+        stream = execFile(`omxplayer.bin`, [`${yturl}`, `-o`, `hdmi`, `--timeout`, `300`, `--threshold`, `5`, '--video_queue', '100', '--audio_queue', '30', '--audio_fifo', '20', '--video_fifo', '40']);
     } else {
         let streamlinkParametersArray = [url];
         if (quality != "") {
@@ -473,7 +473,7 @@ async function LaunchVideo(url, quality, isLive, message) {
         console.log(`stdout: ${data}`);
     });
     stream.on(`close`, (code) => {
-        console.log("Stream zakończony, kod wyjścia: "+code);
+        console.log("Stream zakończony, kod wyjścia: " + code);
         if (code == 130) {
             //message.channel.send("Poprzedni Stream zakończony.");
             return;
@@ -484,7 +484,7 @@ async function LaunchVideo(url, quality, isLive, message) {
 
 async function GetYTUrl(url) {
     let str = "best[height<=720]"
-    let ytdl = execFile(`youtube-dl`, ["-g", `-f`,`${str}`, `${url}`]);
+    let ytdl = execFile(`youtube-dl`, ["-g", `-f`, `${str}`, `${url}`]);
     for await (let data of ytdl.stdout) {
         ytdl.kill(9);
         return data.toString().trim();
